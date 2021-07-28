@@ -8,19 +8,34 @@ use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParse
 use Psalm\Plugin\EventHandler\Event\FunctionReturnTypeProviderEvent;
 use Psalm\Plugin\EventHandler\FunctionReturnTypeProviderInterface;
 use Psalm\Type;
+use Webmozart\Assert\Assert;
+
+use function in_array;
 
 final class PrintfFunctionReturnProvider implements FunctionReturnTypeProviderInterface
 {
-    private const SPRINTF_FUNCTION = 'sprintf';
-    private const PRINTF_FUNCTION  = 'printf';
-    private const SSCANF_FUNCTION  = 'sscanf';
-    private const FSCANF_FUNCTION  = 'fscanf';
+    private const FUNCTION_SPRINTF = 'sprintf';
+    private const FUNCTION_PRINTF  = 'printf';
+    private const FUNCTION_SSCANF  = 'sscanf';
+    private const FUNCTION_FSCANF  = 'fscanf';
 
-    private const TEMPLATE_ARGUMENT_POSITION = [
-        self::SPRINTF_FUNCTION => 0,
-        self::PRINTF_FUNCTION => 0,
-        self::SSCANF_FUNCTION => 1,
-        self::FSCANF_FUNCTION => 1,
+    private const SUPPORTED_FUNCTIONS = [
+        self::FUNCTION_SPRINTF,
+        self::FUNCTION_PRINTF,
+        self::FUNCTION_FSCANF,
+        self::FUNCTION_SSCANF,
+    ];
+
+    private const TEMPLATE_ARGUMENT_POSITION        = [
+        self::FUNCTION_SPRINTF => 0,
+        self::FUNCTION_PRINTF => 0,
+        self::FUNCTION_SSCANF => 1,
+        self::FUNCTION_FSCANF => 1,
+    ];
+
+    private const FUNCTIONS_WITH_STRING_RETURN_TYPE = [
+        self::FUNCTION_SPRINTF,
+        self::FUNCTION_PRINTF,
     ];
 
     /**
@@ -28,12 +43,14 @@ final class PrintfFunctionReturnProvider implements FunctionReturnTypeProviderIn
      */
     public static function getFunctionIds(): array
     {
-        return [self::SPRINTF_FUNCTION, self::PRINTF_FUNCTION];
+        return self::SUPPORTED_FUNCTIONS;
     }
 
     public static function getFunctionReturnType(FunctionReturnTypeProviderEvent $event): ?Type\Union
     {
-        $functionName          = $event->getFunctionId();
+        /** @psalm-var PrintfFunctionReturnProvider::FUNCTION_* $functionName */
+        $functionName = $event->getFunctionId();
+        Assert::oneOf($functionName, self::SUPPORTED_FUNCTIONS);
         $functionCallArguments = $event->getCallArgs();
 
         if (! isset(self::TEMPLATE_ARGUMENT_POSITION[$functionName])) {
@@ -45,20 +62,34 @@ final class PrintfFunctionReturnProvider implements FunctionReturnTypeProviderIn
             return null;
         }
 
-        $templateArgument           = $functionCallArguments[$templateArgumentPosition];
-        $templateWithoutPlaceholder = TemplatedStringParser::fromArgument(
+        $templateArgument      = $functionCallArguments[$templateArgumentPosition];
+        $templatedStringParser = TemplatedStringParser::fromArgument(
             $functionName,
             $templateArgument
-        )->getTemplateWithoutPlaceholder();
+        );
 
-        if ($templateWithoutPlaceholder !== '') {
+        return self::createTypeBasedOnFunction(
+            $functionName,
+            $templatedStringParser
+        );
+    }
+
+    /** @psalm-param PrintfFunctionReturnProvider::FUNCTION_* $functionName */
+    private static function createTypeBasedOnFunction(string $functionName, TemplatedStringParser $parser): ?Type\Union
+    {
+        if (in_array($functionName, self::FUNCTIONS_WITH_STRING_RETURN_TYPE, true)) {
+            $templateWithoutPlaceholder = $parser->getTemplateWithoutPlaceholder();
+            if ($templateWithoutPlaceholder !== '') {
+                return new Type\Union(
+                    [new Type\Atomic\TNonEmptyString()],
+                );
+            }
+
             return new Type\Union(
-                [new Type\Atomic\TNonEmptyString()],
+                [new Type\Atomic\TString()],
             );
         }
 
-        return new Type\Union(
-            [new Type\Atomic\TString()],
-        );
+        return null;
     }
 }
