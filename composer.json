@@ -29,7 +29,7 @@
     "scripts": {
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "test": "codeception run",
+        "test": "codecept run",
         "analyze": "psalm --no-cache"
     }
 }
