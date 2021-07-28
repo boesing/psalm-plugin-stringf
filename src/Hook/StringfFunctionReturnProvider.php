@@ -12,11 +12,10 @@ use Webmozart\Assert\Assert;
 
 use function in_array;
 
-final class PrintfFunctionReturnProvider implements FunctionReturnTypeProviderInterface
+final class StringfFunctionReturnProvider implements FunctionReturnTypeProviderInterface
 {
     private const FUNCTION_SPRINTF = 'sprintf';
     private const FUNCTION_SSCANF  = 'sscanf';
-    private const FUNCTION_FSCANF  = 'fscanf';
 
     private const SUPPORTED_FUNCTIONS = [
         self::FUNCTION_SPRINTF,
@@ -26,7 +25,6 @@ final class PrintfFunctionReturnProvider implements FunctionReturnTypeProviderIn
     private const TEMPLATE_ARGUMENT_POSITION        = [
         self::FUNCTION_SPRINTF => 0,
         self::FUNCTION_SSCANF => 1,
-        self::FUNCTION_FSCANF => 1,
     ];
 
     private const FUNCTIONS_WITH_STRING_RETURN_TYPE = [
@@ -43,7 +41,7 @@ final class PrintfFunctionReturnProvider implements FunctionReturnTypeProviderIn
 
     public static function getFunctionReturnType(FunctionReturnTypeProviderEvent $event): ?Type\Union
     {
-        /** @psalm-var PrintfFunctionReturnProvider::FUNCTION_* $functionName */
+        /** @psalm-var StringfFunctionReturnProvider::FUNCTION_* $functionName */
         $functionName = $event->getFunctionId();
         Assert::oneOf($functionName, self::SUPPORTED_FUNCTIONS);
         $functionCallArguments = $event->getCallArgs();
@@ -69,7 +67,7 @@ final class PrintfFunctionReturnProvider implements FunctionReturnTypeProviderIn
         );
     }
 
-    /** @psalm-param PrintfFunctionReturnProvider::FUNCTION_* $functionName */
+    /** @psalm-param StringfFunctionReturnProvider::FUNCTION_* $functionName */
     private static function createTypeBasedOnFunction(string $functionName, TemplatedStringParser $parser): ?Type\Union
     {
         if (in_array($functionName, self::FUNCTIONS_WITH_STRING_RETURN_TYPE, true)) {
