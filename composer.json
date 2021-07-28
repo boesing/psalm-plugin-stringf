@@ -1,0 +1,23 @@
+{
+    "name": "boesing/psalm-plugin-stringf",
+    "type": "psalm-plugin",
+    "description": "Psalm plugin to work with `sprintf`, `printf`, `sscanf` and `fscanf`.",
+    "license": "BSD-3-Clause",
+    "require": {
+        "php": "^7.4 || ~8.0.0",
+        "vimeo/psalm": "^4.8"
+    },
+    "require-dev": {
+        "doctrine/coding-standard": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Boesing\\PsalmPluginStringf\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "scripts": {
+        "cs-check": "vendor/bin/phpcs",
+        "cs-fix": "vendor/bin/phpcbf"
+    }
+}
