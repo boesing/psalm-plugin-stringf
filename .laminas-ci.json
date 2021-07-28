@@ -1,0 +1,10 @@
+{
+    "additional_checks": [
+        {
+            "name": "Acceptance tests",
+            "job": {
+                "command": "composer test"
+            }
+        }
+    ]
+}
