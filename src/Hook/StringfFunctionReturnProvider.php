@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Boesing\PsalmPluginStringf\Hook;
 
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
+use InvalidArgumentException;
+use PhpParser\Node\Arg;
 use Psalm\Plugin\EventHandler\Event\FunctionReturnTypeProviderEvent;
 use Psalm\Plugin\EventHandler\FunctionReturnTypeProviderInterface;
 use Psalm\Type;
@@ -32,11 +34,27 @@ final class StringfFunctionReturnProvider implements FunctionReturnTypeProviderI
             return null;
         }
 
-        $templateArgument           = $functionCallArguments[self::TEMPLATE_ARGUMENT_POSITION];
-        $templateWithoutPlaceholder = TemplatedStringParser::fromArgument(
-            $functionName,
-            $templateArgument
-        )->getTemplateWithoutPlaceholder();
+        $templateArgument = $functionCallArguments[self::TEMPLATE_ARGUMENT_POSITION];
+        $context          = $event->getContext();
+        try {
+            $parser = TemplatedStringParser::fromArgument(
+                $functionName,
+                $templateArgument,
+                $context
+            );
+        } catch (InvalidArgumentException $exception) {
+            return null;
+        }
+
+        return self::detectTypes($parser);
+    }
+
+    /**
+     * @psalm-param list<Arg> $functionCallArguments
+     */
+    private static function detectTypes(TemplatedStringParser $parser): Type\Union
+    {
+        $templateWithoutPlaceholder = $parser->getTemplateWithoutPlaceholder();
 
         if ($templateWithoutPlaceholder !== '') {
             return new Type\Union(

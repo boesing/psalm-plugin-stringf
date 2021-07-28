@@ -6,8 +6,10 @@ namespace Boesing\PsalmPluginStringf\Parser\TemplatedStringParser;
 
 use Boesing\PsalmPluginStringf\Parser\PhpParser\ArgumentValueParser;
 use PhpParser\Node\Arg;
+use Psalm\Context;
 
 use function array_filter;
+use function assert;
 use function in_array;
 use function max;
 use function preg_match_all;
@@ -30,14 +32,17 @@ final class TemplatedStringParser
 
     private string $templateWithoutPlaceholder;
 
-    /** @psalm-var list<Placeholder> */
+    /** @psalm-var array<positive-int,Placeholder> */
     private array $placeholders;
+
+    private string $template;
 
     private function __construct(
         string $functionName,
         string $template,
         ?int $phpVersion
     ) {
+        $this->template                   = $template;
         $this->templateWithoutPlaceholder = $template;
         $this->placeholders               = [];
         $this->parse($functionName, $template, $phpVersion ?? PHP_INT_MIN);
@@ -91,7 +96,7 @@ final class TemplatedStringParser
 
         $placeholderInstances         = [];
         $removedCharacters            = 0;
-        $maximumOrdinalPosition       = 0;
+        $maximumOrdinalPosition       = 1;
         $maximumPositionByPlaceholder = 0;
 
         $templateWithoutPlaceholders = $template;
@@ -113,7 +118,9 @@ final class TemplatedStringParser
                 $maximumOrdinalPosition++;
             }
 
-            $placeholderInstances[] = Placeholder::create(
+            assert($placeholderPosition > 0);
+
+            $placeholderInstances[$placeholderPosition] = Placeholder::create(
                 $placeholderValue,
                 $placeholderPosition
             );
@@ -125,13 +132,19 @@ final class TemplatedStringParser
 
     public static function fromArgument(
         string $functionName,
-        Arg $templateArgument
+        Arg $templateArgument,
+        Context $context
     ): self {
         return new self(
             $functionName,
-            ArgumentValueParser::create($templateArgument)->toString(),
+            ArgumentValueParser::create($templateArgument->value, $context)->toString(),
             null
         );
+    }
+
+    public function getTemplate(): string
+    {
+        return $this->template;
     }
 
     public function getTemplateWithoutPlaceholder(): string
@@ -139,6 +152,9 @@ final class TemplatedStringParser
         return $this->templateWithoutPlaceholder;
     }
 
+    /**
+     * @psalm-return array<positive-int,Placeholder>
+     */
     public function getPlaceholders(): array
     {
         return $this->placeholders;

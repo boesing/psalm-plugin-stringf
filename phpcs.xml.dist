@@ -13,7 +13,9 @@
     <!-- Show progress of the run -->
     <arg value="p"/>
 
-    <rule ref="Doctrine"/>
+    <rule ref="Doctrine">
+        <exclude name="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
+    </rule>
 
     <file>src</file>
 </ruleset>
