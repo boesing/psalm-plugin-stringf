@@ -8,7 +8,16 @@
         "vimeo/psalm": "^4.8"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^9.0"
+        "codeception/codeception": "^4.1",
+        "doctrine/coding-standard": "^9.0",
+        "codeception/module-phpbrowser": "^1.0",
+        "codeception/module-asserts": "^1.3",
+        "weirdan/codeception-psalm-module": "^0.13.1"
+    },
+    "extra": {
+        "psalm": {
+            "pluginClass": "Boesing\\PsalPluginStringf\\Plugin"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -17,7 +26,9 @@
     },
     "minimum-stability": "stable",
     "scripts": {
-        "cs-check": "vendor/bin/phpcs",
-        "cs-fix": "vendor/bin/phpcbf"
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "codeception run",
+        "analyze": "psalm --no-cache"
     }
 }
