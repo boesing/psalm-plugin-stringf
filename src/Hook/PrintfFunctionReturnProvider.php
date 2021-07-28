@@ -15,27 +15,22 @@ use function in_array;
 final class PrintfFunctionReturnProvider implements FunctionReturnTypeProviderInterface
 {
     private const FUNCTION_SPRINTF = 'sprintf';
-    private const FUNCTION_PRINTF  = 'printf';
     private const FUNCTION_SSCANF  = 'sscanf';
     private const FUNCTION_FSCANF  = 'fscanf';
 
     private const SUPPORTED_FUNCTIONS = [
         self::FUNCTION_SPRINTF,
-        self::FUNCTION_PRINTF,
-        self::FUNCTION_FSCANF,
         self::FUNCTION_SSCANF,
     ];
 
     private const TEMPLATE_ARGUMENT_POSITION        = [
         self::FUNCTION_SPRINTF => 0,
-        self::FUNCTION_PRINTF => 0,
         self::FUNCTION_SSCANF => 1,
         self::FUNCTION_FSCANF => 1,
     ];
 
     private const FUNCTIONS_WITH_STRING_RETURN_TYPE = [
         self::FUNCTION_SPRINTF,
-        self::FUNCTION_PRINTF,
     ];
 
     /**
