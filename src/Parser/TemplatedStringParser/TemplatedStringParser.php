@@ -138,4 +138,9 @@ final class TemplatedStringParser
     {
         return $this->templateWithoutPlaceholder;
     }
+
+    public function getPlaceholders(): array
+    {
+        return $this->placeholders;
+    }
 }
