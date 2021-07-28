@@ -69,3 +69,14 @@ Feature: non empty template passed to sprintf results in non-empty-string
     """
     When I run Psalm
     Then I see no errors
+
+  Scenario: template is provided as variable with string from constant
+    Given I have the following code
+    """
+      const FOO = '%s ';
+      $template = FOO;
+      $string = sprintf($template, '');
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
