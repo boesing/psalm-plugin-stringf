@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Boesing\PsalmPluginStringf\EventHandler;
 
+use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\Placeholder;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
+use Psalm\Context;
 use Psalm\Plugin\EventHandler\Event\FunctionReturnTypeProviderEvent;
 use Psalm\Plugin\EventHandler\FunctionReturnTypeProviderInterface;
 use Psalm\Type;
@@ -46,14 +48,17 @@ final class StringfFunctionReturnProvider implements FunctionReturnTypeProviderI
             return null;
         }
 
-        return self::detectTypes($parser);
+        return self::detectTypes($parser, $functionCallArguments, $context);
     }
 
     /**
      * @psalm-param list<Arg> $functionCallArguments
      */
-    private static function detectTypes(TemplatedStringParser $parser): Type\Union
-    {
+    private static function detectTypes(
+        TemplatedStringParser $parser,
+        array $functionCallArguments,
+        Context $context
+    ): ?Type\Union {
         $templateWithoutPlaceholder = $parser->getTemplateWithoutPlaceholder();
 
         if ($templateWithoutPlaceholder !== '') {
@@ -62,8 +67,36 @@ final class StringfFunctionReturnProvider implements FunctionReturnTypeProviderI
             );
         }
 
-        return new Type\Union(
-            [new Type\Atomic\TString()],
+        $placeholders = $parser->getPlaceholders();
+
+        return self::detectReturnTypeWithConsideringFunctionCallArguments(
+            $placeholders,
+            $functionCallArguments,
+            $context
         );
+    }
+
+    /**
+     * @psalm-param array<positive-int,Placeholder> $placeholders
+     * @psalm-param list<Arg> $functionCallArguments
+     */
+    private static function detectReturnTypeWithConsideringFunctionCallArguments(
+        array $placeholders,
+        array $functionCallArguments,
+        Context $context
+    ): ?Type\Union {
+        if ($placeholders === [] || $functionCallArguments === []) {
+            return null;
+        }
+
+        foreach ($placeholders as $placeholder) {
+            if ($placeholder->stringifiedValueMayBeEmpty($functionCallArguments, $context)) {
+                continue;
+            }
+
+            return new Type\Union([new Type\Atomic\TNonEmptyString()]);
+        }
+
+        return null;
     }
 }

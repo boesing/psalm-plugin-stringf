@@ -80,3 +80,95 @@ Feature: non empty template passed to sprintf results in non-empty-string
     """
     When I run Psalm
     Then I see no errors
+
+  Scenario: template is empty but variable which is passed to the string is non-empty-string
+    Given I have the following code
+    """
+      $variable = ' ';
+      $string = sprintf('%s', $variable);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty but variable which is passed to the string is numeric
+    Given I have the following code
+    """
+      $variable = '1';
+      $string = sprintf('%d', $variable);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty but variable which is passed to the string is special character
+    Given I have the following code
+    """
+      $variable = '?';
+      $string = sprintf('%s', $variable);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty and almost all variables are empty but the last variable which is passed to the string is numeric
+    Given I have the following code
+    """
+      $variable = '1';
+      $string = sprintf('%s%s%d', '', '', $variable);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty but variable which is passed to the string is integer
+    Given I have the following code
+    """
+      $variable = 1;
+      $string = sprintf('%d', $variable);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty but value which is passed to the string is integer
+    Given I have the following code
+    """
+      $string = sprintf('%d', 1);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty but value which is passed to the string is float
+    Given I have the following code
+    """
+      $string = sprintf('%d', 0.9);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty but value which is passed to the string is boolean (true)
+    Given I have the following code
+    """
+      /** @psalm-suppress InvalidScalarArgument */
+      $string = sprintf('%s', true);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty and value which is passed to the string is boolean (false)
+    Given I have the following code
+    """
+      /** @psalm-suppress InvalidScalarArgument */
+      $string = sprintf('%s', false);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
+
+

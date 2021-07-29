@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Boesing\PsalmPluginStringf\Parser\Psalm;
 
 use InvalidArgumentException;
+use Psalm\Type\Atomic\TLiteralString;
 use Psalm\Type\Union;
 
 use function sprintf;
 
 final class LiteralStringVariableParser
 {
+    private function __construct()
+    {
+    }
+
     public static function parse(string $variableName, Union $variableType): string
     {
         if (! $variableType->isSingleStringLiteral()) {
@@ -21,6 +26,11 @@ final class LiteralStringVariableParser
             ));
         }
 
-        return $variableType->getSingleStringLiteral()->value;
+        return self::string($variableType->getSingleStringLiteral());
+    }
+
+    public static function string(TLiteralString $literalString): string
+    {
+        return $literalString->value;
     }
 }
