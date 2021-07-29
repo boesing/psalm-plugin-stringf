@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Boesing\PsalmPluginStringf\Hook;
+namespace Boesing\PsalmPluginStringf\EventHandler;
 
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
