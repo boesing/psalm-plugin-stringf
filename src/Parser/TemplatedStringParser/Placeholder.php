@@ -9,6 +9,7 @@ use Boesing\PsalmPluginStringf\Parser\Psalm\TypeParser;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
 use Psalm\Context;
+use Psalm\Type\Atomic\TNonEmptyString;
 use Psalm\Type\Union;
 
 final class Placeholder
@@ -54,6 +55,10 @@ final class Placeholder
             return true;
         }
 
+        if ($this->isNonEmptyString($type)) {
+            return false;
+        }
+
         $string = $this->stringify($type);
 
         return $string === null || $string === '';
@@ -85,5 +90,20 @@ final class Placeholder
     private function stringify(Union $type): ?string
     {
         return TypeParser::create($type)->stringify();
+    }
+
+    private function isNonEmptyString(Union $type): bool
+    {
+        if (! $type->isString()) {
+            return false;
+        }
+
+        foreach ($type->getAtomicTypes() as $type) {
+            if (! $type instanceof TNonEmptyString) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

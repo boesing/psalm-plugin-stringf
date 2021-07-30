@@ -171,4 +171,14 @@ Feature: non empty template passed to sprintf results in non-empty-string
       | Type  | Message |
       | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
 
+  Scenario: template is empty but value which is passed to the string is of type non-empty-string
+    Given: I Have the following code
+    """
+      /** @psalm-var non-empty-string $nonEmptyString */
+      $nonEmptyString = '';
+      $string = sprintf('%s', $nonEmptyString);
+      nonEmptyString($string);
+    """
+    When I run psalm
+    Then I see no errors
 
