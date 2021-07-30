@@ -3,26 +3,26 @@ Feature: non empty template passed to sprintf results in non-empty-string
 
   Background:
     Given I have the following config
-      """
-      <?xml version="1.0"?>
-      <psalm errorLevel="1">
-        <projectFiles>
-          <directory name="."/>
-        </projectFiles>
-        <plugins>
-          <pluginClass class="Boesing\PsalmPluginStringf\Plugin"/>
-        </plugins>
-      </psalm>
-      """
+    """
+    <?xml version="1.0"?>
+    <psalm errorLevel="1">
+      <projectFiles>
+        <directory name="."/>
+      </projectFiles>
+      <plugins>
+        <pluginClass class="Boesing\PsalmPluginStringf\Plugin"/>
+      </plugins>
+    </psalm>
+    """
     And I have the following code preamble
-      """
-      <?php declare(strict_types=1);
-      /**
-      * @param non-empty-string $_
-      */
-      function nonEmptyString(string $_): void
-      {}
-      """
+    """
+    <?php declare(strict_types=1);
+    /**
+    * @param non-empty-string $_
+    */
+    function nonEmptyString(string $_): void
+    {}
+    """
 
   Scenario: template contains a whitespace
     Given I have the following code
@@ -91,10 +91,21 @@ Feature: non empty template passed to sprintf results in non-empty-string
     When I run Psalm
     Then I see no errors
 
-  Scenario: template is empty but variable which is passed to the string is numeric
+  Scenario: template is empty but variable which is passed to the string is known and numeric
     Given I have the following code
     """
       $variable = '1';
+      $string = sprintf('%d', $variable);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template is empty but variable which is passed to the string is numeric
+    Given I have the following code
+    """
+      /** @psalm-var numeric-string */
+      $variable = '';
       $string = sprintf('%d', $variable);
       nonEmptyString($string);
     """
@@ -162,7 +173,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
   Scenario: template is empty and value which is passed to the string is boolean (false)
     Given I have the following code
     """
-      /** @psalm-suppress InvalidScalarArgument */
+      /** @psalm-suppress InvalidScalarArgument,PossiblyFalseArgument */
       $string = sprintf('%s', false);
       nonEmptyString($string);
     """
@@ -172,7 +183,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
       | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
 
   Scenario: template is empty but value which is passed to the string is of type non-empty-string
-    Given: I Have the following code
+    Given I have the following code
     """
       /** @psalm-var non-empty-string $nonEmptyString */
       $nonEmptyString = '';
