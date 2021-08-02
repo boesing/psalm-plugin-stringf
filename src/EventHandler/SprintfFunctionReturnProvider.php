@@ -13,7 +13,7 @@ use Psalm\Plugin\EventHandler\Event\FunctionReturnTypeProviderEvent;
 use Psalm\Plugin\EventHandler\FunctionReturnTypeProviderInterface;
 use Psalm\Type;
 
-final class StringfFunctionReturnProvider implements FunctionReturnTypeProviderInterface
+final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderInterface
 {
     private const FUNCTION_SPRINTF = 'sprintf';
 
