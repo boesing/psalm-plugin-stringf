@@ -33,7 +33,7 @@ Feature: printf argument count mismatch
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | TooFewArguments | Template passed to function `sprintf` requires 1 specifier but 0 are passed. |
+      | TooFewArguments | Template passed to function `printf` requires 1 specifier but 0 are passed. |
 
   Scenario: template has one specifier but two arguments provided
     Given I have the following code
@@ -43,7 +43,7 @@ Feature: printf argument count mismatch
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | TooManyArguments | Template passed to function `sprintf` requires 1 specifier but 2 are passed. |
+      | TooManyArguments | Template passed to function `printf` requires 1 specifier but 2 are passed. |
 
   Scenario: template has one specifier but repeated multiple times
     Given I have the following code
