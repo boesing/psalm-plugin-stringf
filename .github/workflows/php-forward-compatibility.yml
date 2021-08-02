@@ -10,7 +10,7 @@ on:
 jobs:
   qa:
     continue-on-error: true
-    name: Unit tests
+    name: Acceptance Tests
     runs-on: "ubuntu-latest"
     steps:
       - name: Checkout
