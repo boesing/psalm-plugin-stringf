@@ -10,6 +10,7 @@ use Psalm\Context;
 
 use function array_filter;
 use function assert;
+use function count;
 use function in_array;
 use function max;
 use function preg_match_all;
@@ -94,6 +95,7 @@ final class TemplatedStringParser
             return;
         }
 
+        /** @var array<positive-int,Placeholder> $placeholderInstances */
         $placeholderInstances         = [];
         $removedCharacters            = 0;
         $maximumOrdinalPosition       = 1;
@@ -120,10 +122,18 @@ final class TemplatedStringParser
 
             assert($placeholderPosition > 0);
 
-            $placeholderInstances[$placeholderPosition] = Placeholder::create(
+            $initialPlaceholderInstance = $placeholderInstances[$placeholderPosition] ?? null;
+            $placeholderInstance        = Placeholder::create(
                 $placeholderValue,
                 $placeholderPosition
             );
+
+            if ($initialPlaceholderInstance !== null) {
+                $placeholderInstance = $initialPlaceholderInstance
+                    ->withRepeatedPlaceholder($placeholderInstance);
+            }
+
+            $placeholderInstances[$placeholderPosition] = $placeholderInstance;
         }
 
         $this->placeholders               = $placeholderInstances;
@@ -158,5 +168,11 @@ final class TemplatedStringParser
     public function getPlaceholders(): array
     {
         return $this->placeholders;
+    }
+
+    public function getPlaceholderCount(): int
+    {
+        // TODO: normalize as %1$s is the same as %s, e.g.
+        return count($this->placeholders);
     }
 }

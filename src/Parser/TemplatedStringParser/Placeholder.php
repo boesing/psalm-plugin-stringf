@@ -20,6 +20,9 @@ final class Placeholder
 
     private ?Union $type;
 
+    /** @var list<Placeholder> */
+    private array $repeated = [];
+
     private function __construct(string $value, int $position)
     {
         $this->value    = $value;
@@ -105,5 +108,13 @@ final class Placeholder
         }
 
         return true;
+    }
+
+    public function withRepeatedPlaceholder(Placeholder $placeholder): self
+    {
+        $instance             = clone $this;
+        $instance->repeated[] = $placeholder;
+
+        return $instance;
     }
 }
