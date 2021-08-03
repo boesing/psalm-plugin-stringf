@@ -69,7 +69,10 @@ final class Plugin implements PluginEntryPointInterface
         }
 
         /** @psalm-suppress UnresolvableInclude */
-        require_once __DIR__ . sprintf('/EventHandler/%s.php', basename(str_replace('\\', '/', $eventHandlerClassName)));
+        require_once __DIR__ . sprintf(
+            '/EventHandler/%s.php',
+            basename(str_replace('\\', '/', $eventHandlerClassName))
+        );
         $registration->registerHooksFromClass($eventHandlerClassName);
     }
 }
