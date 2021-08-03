@@ -116,6 +116,9 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
             }
 
             $type = $placeholder->getSuggestedType();
+            if ($type === null) {
+                continue;
+            }
 
             if ($this->validateArgumentTypeMatchesSuggestedType($argumentType, $type)) {
                 continue;

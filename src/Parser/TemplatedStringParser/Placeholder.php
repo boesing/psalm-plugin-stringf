@@ -132,13 +132,18 @@ final class Placeholder
         return $instance;
     }
 
-    public function getSuggestedType(): Union
+    public function getSuggestedType(): ?Union
     {
         if ($this->type) {
             return $this->type;
         }
 
-        $type = SpecifierTypeGenerator::create($this->value)->getSuggestedType();
+        try {
+            $type = SpecifierTypeGenerator::create($this->value)->getSuggestedType();
+        } catch (InvalidArgumentException $exception) {
+            return null;
+        }
+
         if ($this->repeated === []) {
             return $type;
         }
@@ -146,7 +151,11 @@ final class Placeholder
         $unions = [$type];
 
         foreach ($this->repeated as $placeholder) {
-            $unions[] = $placeholder->getSuggestedType();
+            try {
+                $unions[] = $placeholder->getSuggestedType();
+            } catch (InvalidArgumentException $exception) {
+                return null;
+            }
         }
 
         $types = [];
