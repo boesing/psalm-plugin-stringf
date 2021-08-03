@@ -151,11 +151,12 @@ final class Placeholder
         $unions = [$type];
 
         foreach ($this->repeated as $placeholder) {
-            try {
-                $unions[] = $placeholder->getSuggestedType();
-            } catch (InvalidArgumentException $exception) {
+            $suggestion = $placeholder->getSuggestedType();
+            if ($suggestion === null) {
                 return null;
             }
+
+            $unions[] = $suggestion;
         }
 
         $types = [];
