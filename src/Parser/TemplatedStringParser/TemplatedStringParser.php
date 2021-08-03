@@ -121,6 +121,7 @@ final class TemplatedStringParser
             }
 
             assert($placeholderPosition > 0);
+            assert($placeholderValue !== '');
 
             $initialPlaceholderInstance = $placeholderInstances[$placeholderPosition] ?? null;
             $placeholderInstance        = Placeholder::create(

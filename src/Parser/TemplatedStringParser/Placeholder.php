@@ -14,22 +14,35 @@ use Psalm\Type\Union;
 
 final class Placeholder
 {
+    /** @psalm-var positive-int */
     public int $position;
 
+    /** @psalm-var non-empty-string */
     public string $value;
 
-    private ?Union $type;
+    private ?Union $argumentValueType;
 
     /** @var list<Placeholder> */
     private array $repeated = [];
 
+    private ?Union $type;
+
+    /**
+     * @psalm-param non-empty-string $value
+     * @psalm-param positive-int $position
+     */
     private function __construct(string $value, int $position)
     {
-        $this->value    = $value;
-        $this->position = $position;
-        $this->type     = null;
+        $this->value             = $value;
+        $this->position          = $position;
+        $this->argumentValueType = null;
+        $this->type              = null;
     }
 
+    /**
+     * @psalm-param non-empty-string $value
+     * @psalm-param positive-int $position
+     */
     public static function create(string $value, int $position): self
     {
         return new self($value, $position);
@@ -40,7 +53,7 @@ final class Placeholder
      */
     public function getArgumentValue(array $functionCallArguments, Context $context): ?string
     {
-        $type = $this->type($functionCallArguments, $context);
+        $type = $this->getArgumentType($functionCallArguments, $context);
         if ($type === null) {
             return null;
         }
@@ -53,7 +66,7 @@ final class Placeholder
      */
     public function stringifiedValueMayBeEmpty(array $functionCallArguments, Context $context): bool
     {
-        $type = $this->type($functionCallArguments, $context);
+        $type = $this->getArgumentType($functionCallArguments, $context);
         if ($type === null) {
             return true;
         }
@@ -70,10 +83,10 @@ final class Placeholder
     /**
      * @psalm-param list<Arg> $functionCallArguments
      */
-    private function type(array $functionCallArguments, Context $context): ?Union
+    public function getArgumentType(array $functionCallArguments, Context $context): ?Union
     {
-        if ($this->type) {
-            return $this->type;
+        if ($this->argumentValueType) {
+            return $this->argumentValueType;
         }
 
         $argument = $functionCallArguments[$this->position] ?? null;
@@ -82,12 +95,12 @@ final class Placeholder
         }
 
         try {
-            $this->type = ArgumentValueParser::create($argument->value, $context)->toType();
+            $this->argumentValueType = ArgumentValueParser::create($argument->value, $context)->toType();
         } catch (InvalidArgumentException $exception) {
             return null;
         }
 
-        return $this->type;
+        return $this->argumentValueType;
     }
 
     private function stringify(Union $type): ?string
@@ -114,7 +127,35 @@ final class Placeholder
     {
         $instance             = clone $this;
         $instance->repeated[] = $placeholder;
+        $instance->type       = null;
 
         return $instance;
+    }
+
+    public function getSuggestedType(): Union
+    {
+        if ($this->type) {
+            return $this->type;
+        }
+
+        $type = SpecifierTypeGenerator::create($this->value)->getSuggestedType();
+        if ($this->repeated === []) {
+            return $type;
+        }
+
+        $unions = [$type];
+
+        foreach ($this->repeated as $placeholder) {
+            $unions[] = $placeholder->getSuggestedType();
+        }
+
+        $types = [];
+        foreach ($unions as $union) {
+            foreach ($union->getAtomicTypes() as $type) {
+                $types[] = $type;
+            }
+        }
+
+        return $this->type = new Union($types);
     }
 }
