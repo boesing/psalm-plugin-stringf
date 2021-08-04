@@ -6,6 +6,8 @@ on:
       - completed
     workflows:
       - "Continuous Integration"
+    branches-ignore:
+      - "*.x"
 
 jobs:
   merge-me:
