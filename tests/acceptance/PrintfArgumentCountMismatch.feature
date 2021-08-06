@@ -52,3 +52,27 @@ Feature: printf argument count mismatch
     """
     When I run Psalm
     Then I see no errors
+
+  Scenario: sscanf has two specifier but only one variable is passed to retrieve the result
+    Given I have the following code
+    """
+      sscanf('1', '%d %d', $number);
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `sscanf` declares 2 specifier but only 1 argument is passed. |
+
+  Scenario: fscanf has two specifier but only one variable is passed to retrieve the result
+    Given I have the following code
+    """
+      /** @psalm-var resource $resource */
+      $resource = null;
+      fscanf($resource, '%s %f', $foo);
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `fscanf` declares 2 specifier but only 1 argument is passed. |
+
+
