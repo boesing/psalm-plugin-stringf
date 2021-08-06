@@ -155,6 +155,10 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
     private function validateArgumentTypeMatchesSuggestedType(Union $argument, Union $suggested): bool
     {
         foreach ($argument->getAtomicTypes() as $type) {
+            if ($this->invalidTypeWouldBeCoveredByPsalmItself($type)) {
+                return true;
+            }
+
             foreach ($suggested->getAtomicTypes() as $suggestType) {
                 if ($type instanceof $suggestType) {
                     return true;
@@ -178,5 +182,22 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         }
 
         return false;
+    }
+
+    private function invalidTypeWouldBeCoveredByPsalmItself(Atomic $type): bool
+    {
+        if ($type instanceof Atomic\TString) {
+            return false;
+        }
+
+        if ($type instanceof Atomic\TInt) {
+            return false;
+        }
+
+        if ($type instanceof Atomic\TFloat) {
+            return false;
+        }
+
+        return true;
     }
 }

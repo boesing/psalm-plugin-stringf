@@ -4,7 +4,7 @@ Feature: printf argument type verification
     Given I have the following config
     """
     <?xml version="1.0"?>
-    <psalm errorLevel="1">
+    <psalm errorLevel="1" findUnusedPsalmSuppress="true">
       <projectFiles>
         <directory name="."/>
       </projectFiles>
@@ -66,6 +66,19 @@ Feature: printf argument type verification
     Given I have the following code
     """
       $string = '12345';
+      printf('%d', $string);
+    """
+    When I run Psalm
+    Then I see no errors
+
+  Scenario: template requires double and called with a mixed variable
+  (non -int/-string/-float arguments are reported by psalm)
+    Given I have the following code
+    """
+      /** @psalm-var mixed $string */
+      $string = '';
+
+      /** @psalm-suppress MixedArgument */
       printf('%d', $string);
     """
     When I run Psalm
