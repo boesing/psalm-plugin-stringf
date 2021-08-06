@@ -17,7 +17,9 @@ Feature: printf argument type verification
       </issueHandlers>
       <plugins>
         <pluginClass class="Boesing\PsalmPluginStringf\Plugin">
-          <feature name="ReportPossiblyInvalidArgumentForSpecifier" enabled="true"/>
+          <experimental>
+           <ReportPossiblyInvalidArgumentForSpecifier/>
+          </experimental>
         </pluginClass>
       </plugins>
     </psalm>

@@ -7,20 +7,19 @@ namespace Boesing\PsalmPluginStringf;
 use Boesing\PsalmPluginStringf\EventHandler\PossiblyInvalidArgumentForSpecifierValidator;
 use Boesing\PsalmPluginStringf\EventHandler\SprintfFunctionReturnProvider;
 use Boesing\PsalmPluginStringf\EventHandler\StringfFunctionArgumentValidator;
-use Psalm\Exception\ConfigCreationException;
 use Psalm\Plugin\PluginEntryPointInterface;
 use Psalm\Plugin\RegistrationInterface;
 use SimpleXMLElement;
 
 use function assert;
 use function basename;
+use function file_exists;
 use function sprintf;
 use function str_replace;
 
 final class Plugin implements PluginEntryPointInterface
 {
-    private const CONFIGURATION_FEATURE_ELEMENT = 'feature';
-    private const FEATURE_TO_EVENT_HANDLER      = [
+    private const EXPERIMENTAL_FEATURES = [
         'ReportPossiblyInvalidArgumentForSpecifier' => PossiblyInvalidArgumentForSpecifierValidator::class,
     ];
 
@@ -35,44 +34,37 @@ final class Plugin implements PluginEntryPointInterface
             return;
         }
 
-        $this->registerHooksForConfiguration($registration, $config);
+        $this->registerExperimentalHooks($registration, $config);
     }
 
-    private function registerHooksForConfiguration(RegistrationInterface $registration, SimpleXMLElement $config): void
+    private function registerExperimentalHooks(RegistrationInterface $registration, SimpleXMLElement $config): void
     {
-        foreach ($config->feature ?? [] as $element) {
-            assert($element instanceof SimpleXMLElement);
-            if ($element->getName() !== self::CONFIGURATION_FEATURE_ELEMENT) {
-                continue;
-            }
-
-            $this->registerFeatureHook($registration, $element);
-        }
-    }
-
-    private function registerFeatureHook(RegistrationInterface $registration, SimpleXMLElement $element): void
-    {
-        $nameAttribute    = $element['name'] ?? null;
-        $enabledAttribute = $element['enabled'] ?? null;
-        if (! $nameAttribute instanceof SimpleXMLElement || ! $enabledAttribute instanceof SimpleXMLElement) {
-            throw new ConfigCreationException(
-                'Configuration is invalid! Missing `name` and/or `enabled` in one or more `<feature>`-Nodes.'
-            );
-        }
-
-        $enabled = ((string) $enabledAttribute) === 'true';
-        $name    = (string) $nameAttribute;
-
-        $eventHandlerClassName = self::FEATURE_TO_EVENT_HANDLER[$name] ?? null;
-        if ($eventHandlerClassName === null || ! $enabled) {
+        if (! $config->experimental instanceof SimpleXMLElement) {
             return;
         }
 
-        /** @psalm-suppress UnresolvableInclude */
-        require_once __DIR__ . sprintf(
+        foreach ($config->experimental->children() as $element) {
+            assert($element instanceof SimpleXMLElement);
+            $name = $element->getName();
+            if (! isset(self::EXPERIMENTAL_FEATURES[$name])) {
+                continue;
+            }
+
+            $this->registerFeatureHook($registration, $name);
+        }
+    }
+
+    private function registerFeatureHook(RegistrationInterface $registration, string $featureName): void
+    {
+        $eventHandlerClassName = self::EXPERIMENTAL_FEATURES[$featureName];
+
+        $fileName =  __DIR__ . sprintf(
             '/EventHandler/%s.php',
             basename(str_replace('\\', '/', $eventHandlerClassName))
         );
+        assert(file_exists($fileName));
+        require_once $fileName;
+
         $registration->registerHooksFromClass($eventHandlerClassName);
     }
 }
