@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Boesing\PsalmPluginStringf\EventHandler;
 
+use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\Placeholder;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
@@ -42,7 +43,8 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
             $parser = TemplatedStringParser::fromArgument(
                 $functionName,
                 $templateArgument,
-                $context
+                $context,
+                PhpVersion::fromStatementSource($event->getStatementsSource())
             );
         } catch (InvalidArgumentException $exception) {
             return null;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Boesing\PsalmPluginStringf\EventHandler;
 
+use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
 use Psalm\CodeLocation;
@@ -66,7 +67,8 @@ final class StringfFunctionArgumentValidator implements AfterEveryFunctionCallAn
             $parsed = TemplatedStringParser::fromArgument(
                 $functionId,
                 $template,
-                $context
+                $context,
+                PhpVersion::fromCodebase($event->getCodebase())
             );
         } catch (InvalidArgumentException $exception) {
             return;

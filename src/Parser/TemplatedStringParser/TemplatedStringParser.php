@@ -19,7 +19,6 @@ use function strlen;
 use function substr_replace;
 
 use const ARRAY_FILTER_USE_BOTH;
-use const PHP_INT_MIN;
 use const PREG_OFFSET_CAPTURE;
 use const PREG_SET_ORDER;
 
@@ -38,15 +37,18 @@ final class TemplatedStringParser
 
     private string $template;
 
+    /**
+     * @psalm-param positive-int $phpVersion
+     */
     private function __construct(
         string $functionName,
         string $template,
-        ?int $phpVersion
+        int $phpVersion
     ) {
         $this->template                   = $template;
         $this->templateWithoutPlaceholder = $template;
         $this->placeholders               = [];
-        $this->parse($functionName, $template, $phpVersion ?? PHP_INT_MIN);
+        $this->parse($functionName, $template, $phpVersion);
     }
 
     private function parse(
@@ -141,15 +143,17 @@ final class TemplatedStringParser
         $this->templateWithoutPlaceholder = $templateWithoutPlaceholders;
     }
 
+    /** @psalm-param positive-int $phpVersion */
     public static function fromArgument(
         string $functionName,
         Arg $templateArgument,
-        Context $context
+        Context $context,
+        int $phpVersion
     ): self {
         return new self(
             $functionName,
             ArgumentValueParser::create($templateArgument->value, $context)->toString(),
-            null
+            $phpVersion
         );
     }
 

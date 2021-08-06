@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Boesing\PsalmPluginStringf\EventHandler;
 
+use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
@@ -78,19 +79,27 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
             $arguments
         ))->assert(
             new CodeLocation($event->getStatementsSource(), $expression),
-            $context
+            $context,
+            PhpVersion::fromCodebase($event->getCodebase())
         );
     }
 
-    public function assert(CodeLocation $codeLocation, Context $context): void
-    {
+    /**
+     * @psalm-param positive-int $phpVersion
+     */
+    public function assert(
+        CodeLocation $codeLocation,
+        Context $context,
+        int $phpVersion
+    ): void {
         $template = $this->arguments[0];
 
         try {
             $parsed = TemplatedStringParser::fromArgument(
                 $this->functionName,
                 $template,
-                $context
+                $context,
+                $phpVersion
             );
         } catch (InvalidArgumentException $exception) {
             return;
