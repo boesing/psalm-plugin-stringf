@@ -5,31 +5,29 @@ declare(strict_types=1);
 namespace Boesing\PsalmPluginStringf\Parser\Psalm;
 
 use InvalidArgumentException;
+use LogicException;
+use Psalm\Type\Atomic\TFloat;
+use Psalm\Type\Atomic\TLiteralFloat;
 use Psalm\Type\Union;
+use Webmozart\Assert\Assert;
 
+use function assert;
 use function count;
 use function reset;
-use function sprintf;
 
 final class FloatVariableParser
 {
-    private Union $variable;
+    private TFloat $variable;
 
-    private function __construct(string $variableName, Union $variableType)
+    private function __construct(Union $variableType)
     {
-        $this->variable = $variableType;
-        if (! $variableType->isFloat()) {
-            throw new InvalidArgumentException(sprintf(
-                'Cannot parse float from variable "%s" of type: %s',
-                $variableName,
-                (string) $variableType
-            ));
-        }
+        Assert::true($variableType->isFloat());
+        $this->variable = $this->extract($variableType);
     }
 
-    public static function stringify(string $variableName, Union $variableType): string
+    public static function stringify(Union $variableType): string
     {
-        return (new self($variableName, $variableType))->toString();
+        return (new self($variableType))->toString();
     }
 
     private function toString(): string
@@ -39,11 +37,47 @@ final class FloatVariableParser
 
     private function toSingleFloat(): float
     {
-        $floats = $this->variable->getLiteralFloats();
-        if (count($floats) === 1) {
-            return reset($floats)->value;
+        if (! $this->variable instanceof TLiteralFloat) {
+            throw new LogicException('Variable is not a literal float.');
         }
 
-        throw new InvalidArgumentException('Cannot parse on-single float value');
+        return $this->variable->value;
+    }
+
+    private function extract(Union $variableType): TFloat
+    {
+        if (self::isSingleFloatLiteral($variableType)) {
+            return self::getSingleFloatLiteral($variableType);
+        }
+
+        $atomicTypes = $variableType->getAtomicTypes();
+        assert(isset($atomicTypes['float']));
+        $type = $atomicTypes['float'];
+        assert($type instanceof TFloat);
+
+        return $type;
+    }
+
+    /**
+     * Can be removed when https://github.com/vimeo/psalm/pull/6252 will be merged.
+     */
+    public static function isSingleFloatLiteral(Union $type): bool
+    {
+        return $type->getLiteralFloats() !== [] && $type->isSingle();
+    }
+
+    /**
+     * Can be removed when https://github.com/vimeo/psalm/pull/6252 will be merged.
+     */
+    public static function getSingleFloatLiteral(Union $variableType): TLiteralFloat
+    {
+        if (! self::isSingleFloatLiteral($variableType)) {
+            throw new InvalidArgumentException('Not a single float literal');
+        }
+
+        $literals = $variableType->getLiteralFloats();
+        assert(count($literals) > 0);
+
+        return reset($literals);
     }
 }

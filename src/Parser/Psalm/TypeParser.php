@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Boesing\PsalmPluginStringf\Parser\Psalm;
 
 use Psalm\Type\Union;
-use Webmozart\Assert\Assert;
-
-use function reset;
 
 final class TypeParser
 {
@@ -40,14 +37,11 @@ final class TypeParser
         }
 
         if ($type->isFloat()) {
-            if (! $type->isSingle()) {
-                return null;
+            if (FloatVariableParser::isSingleFloatLiteral($type)) {
+                return FloatVariableParser::stringify($type);
             }
 
-            $floats = $type->getLiteralFloats();
-            Assert::count($floats, 1);
-
-            return (string) reset($floats)->value;
+            return null;
         }
 
         if ($type->isTrue()) {

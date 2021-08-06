@@ -49,8 +49,8 @@ final class StringableVariableInContextParser
             return LiteralIntVariableParser::stringify($variableName, $variable);
         }
 
-        if ($variable->isFloat()) {
-            return FloatVariableParser::stringify($variableName, $variable);
+        if (FloatVariableParser::isSingleFloatLiteral($variable)) {
+            return FloatVariableParser::stringify($variable);
         }
 
         throw new InvalidArgumentException(sprintf(

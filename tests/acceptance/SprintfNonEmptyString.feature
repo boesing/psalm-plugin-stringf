@@ -193,3 +193,15 @@ Feature: non empty template passed to sprintf results in non-empty-string
     When I run psalm
     Then I see no errors
 
+  Scenario: template gets passed float argument without knowing its value
+    Given I have the following code
+    """
+      /** @psalm-var float $float */
+      $float = 0.00;
+      $string = sprintf('%0.2f', $float);
+      nonEmptyString($string);
+    """
+    When I run psalm
+    Then I see these errors
+      | Type  | Message |
+      | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
