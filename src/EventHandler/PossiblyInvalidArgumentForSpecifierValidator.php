@@ -14,10 +14,14 @@ use Psalm\Issue\PossiblyInvalidArgument;
 use Psalm\IssueBuffer;
 use Psalm\Plugin\EventHandler\AfterEveryFunctionCallAnalysisInterface;
 use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
+use Psalm\Type\Atomic;
+use Psalm\Type\Atomic\TLiteralString;
+use Psalm\Type\Atomic\TNumericString;
 use Psalm\Type\Union;
 use Webmozart\Assert\Assert;
 
 use function in_array;
+use function is_numeric;
 use function sprintf;
 
 final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFunctionCallAnalysisInterface
@@ -146,6 +150,21 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                 if ($type instanceof $suggestType) {
                     return true;
                 }
+
+                if ($this->typeMatchesSuggestedTypeDueToAdditionalChecks($type, $suggestType)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private function typeMatchesSuggestedTypeDueToAdditionalChecks(Atomic $type, Atomic $suggestType): bool
+    {
+        if ($suggestType instanceof TNumericString) {
+            if ($type instanceof TLiteralString) {
+                return is_numeric($type->value);
             }
         }
 

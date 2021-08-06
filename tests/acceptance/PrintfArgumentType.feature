@@ -61,3 +61,12 @@ Feature: printf argument type verification
     """
     When I run Psalm
     Then I see no errors
+
+  Scenario: template requires double and called with a numeric-string which is automatically inferred
+    Given I have the following code
+    """
+      $string = '12345';
+      printf('%d', $string);
+    """
+    When I run Psalm
+    Then I see no errors
