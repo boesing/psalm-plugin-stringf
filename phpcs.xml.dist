@@ -15,6 +15,7 @@
 
     <rule ref="Doctrine">
         <exclude name="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
+        <exclude name="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn.UselessIfCondition"/>
     </rule>
 
     <file>src</file>
