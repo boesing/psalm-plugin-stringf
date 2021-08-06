@@ -1,6 +1,6 @@
 # Psalm Plugin Stringf
 
-[![Build Status](https://github.com/boesing/psalm-plugin-stringf/actions/workflows/continous-integration.yml/badge.svg)](https://github.com/boesing/psalm-plugin-stringf/actions/workflows/continous-integration.yml)
+[![Build Status](https://github.com/boesing/psalm-plugin-stringf/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/boesing/psalm-plugin-stringf/actions/workflows/continuous-integration.yml)
 
 This plugin provides additional checks to the built-in `sprintf`, `printf`, `sscanf` and `fscanf` function usage.
 
