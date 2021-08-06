@@ -5,7 +5,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     Given I have the following config
     """
     <?xml version="1.0"?>
-    <psalm errorLevel="1">
+    <psalm errorLevel="1" findUnusedPsalmSuppress="true">
       <projectFiles>
         <directory name="."/>
       </projectFiles>
