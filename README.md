@@ -72,3 +72,13 @@ printf('%s', 1.035);
 ```
 PossiblyInvalidArgument: Argument 1 inferred as "float" does not match (any of) the suggested type(s) "string"
 ```
+
+## Release Versioning Disclaimer
+
+This plugin won't follow semantic versioning even tho the version numbers state to be semantic versioning compliant.
+The source code of this plugin is not meant to used like library code and therefore **MUST** be treated as internal code.
+- This package will raise dependency requirements whenever necessary.
+- If there is a new major version of psalm, this plugin **MAY** migrate to that version but won't be early adopter.
+- If there is a new PHP minor/major version which is not supported by this library, this library **MAY** migrate to that version but won't be early adopter.
+
+So to summarize: If your project depends on the latest shiny versions of either Psalm or PHP, this plugin is not for you. If you can live with that, feel free to install. Demands in any way will be either ignored or handled whenever I feel I want to spend time on it.
