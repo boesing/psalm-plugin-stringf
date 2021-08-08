@@ -22,6 +22,10 @@ use const ARRAY_FILTER_USE_BOTH;
 use const PREG_OFFSET_CAPTURE;
 use const PREG_SET_ORDER;
 
+/**
+ * This class was heavily inspired by {@link https://github.com/phpstan/phpstan-src/blob/c471c7b050e0929daf432288770de673b394a983/src/Rules/Functions/PrintfParametersRule.php PHPStan}.
+ * Part of this file therefore belongs to the work of Ondřej Mirtes.
+ */
 final class TemplatedStringParser
 {
     private const ARGUMENT_SCAN_REGEX_PATTERN_PREFIX       = '(?<before>%*)%(?:(?<position>\d+)\$)?[-+]?(?:[ 0]|'
