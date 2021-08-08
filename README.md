@@ -66,12 +66,14 @@ PossiblyInvalidArgument: Argument 1 inferred as "int" does not match (any of) th
 
 
 ```php
-printf('%s', 1.035);
+printf('%d', 'foo');
 ```
 
 ```
-PossiblyInvalidArgument: Argument 1 inferred as "float" does not match (any of) the suggested type(s) "string"
+PossiblyInvalidArgument: Argument 1 inferred as "string" does not match (any of) the suggested type(s) "float\|int\|numeric-string"
 ```
+
+
 
 ## Release Versioning Disclaimer
 
