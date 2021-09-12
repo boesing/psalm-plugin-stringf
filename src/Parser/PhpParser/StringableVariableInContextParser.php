@@ -49,7 +49,7 @@ final class StringableVariableInContextParser
             return LiteralIntVariableParser::stringify($variableName, $variable);
         }
 
-        if (FloatVariableParser::isSingleFloatLiteral($variable)) {
+        if ($variable->isSingleFloatLiteral()) {
             return FloatVariableParser::stringify($variable);
         }
 

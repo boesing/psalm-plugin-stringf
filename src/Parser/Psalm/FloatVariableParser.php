@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Boesing\PsalmPluginStringf\Parser\Psalm;
 
-use InvalidArgumentException;
 use LogicException;
 use Psalm\Type\Atomic\TFloat;
 use Psalm\Type\Atomic\TLiteralFloat;
@@ -12,8 +11,6 @@ use Psalm\Type\Union;
 use Webmozart\Assert\Assert;
 
 use function assert;
-use function count;
-use function reset;
 
 final class FloatVariableParser
 {
@@ -46,8 +43,8 @@ final class FloatVariableParser
 
     private function extract(Union $variableType): TFloat
     {
-        if (self::isSingleFloatLiteral($variableType)) {
-            return self::getSingleFloatLiteral($variableType);
+        if ($variableType->isSingleFloatLiteral()) {
+            return $variableType->getSingleFloatLiteral();
         }
 
         $atomicTypes = $variableType->getAtomicTypes();
@@ -56,28 +53,5 @@ final class FloatVariableParser
         assert($type instanceof TFloat);
 
         return $type;
-    }
-
-    /**
-     * Can be removed when https://github.com/vimeo/psalm/pull/6252 will be merged.
-     */
-    public static function isSingleFloatLiteral(Union $type): bool
-    {
-        return $type->getLiteralFloats() !== [] && $type->isSingle();
-    }
-
-    /**
-     * Can be removed when https://github.com/vimeo/psalm/pull/6252 will be merged.
-     */
-    public static function getSingleFloatLiteral(Union $variableType): TLiteralFloat
-    {
-        if (! self::isSingleFloatLiteral($variableType)) {
-            throw new InvalidArgumentException('Not a single float literal');
-        }
-
-        $literals = $variableType->getLiteralFloats();
-        assert(count($literals) > 0);
-
-        return reset($literals);
     }
 }
