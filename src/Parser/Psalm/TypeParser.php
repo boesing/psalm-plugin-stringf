@@ -37,7 +37,7 @@ final class TypeParser
         }
 
         if ($type->isFloat()) {
-            if (FloatVariableParser::isSingleFloatLiteral($type)) {
+            if ($type->isSingleFloatLiteral()) {
                 return FloatVariableParser::stringify($type);
             }
 
