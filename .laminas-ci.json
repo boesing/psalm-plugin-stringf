@@ -1,0 +1,13 @@
+{
+    "additional_checks": {
+        "name": "Codeception on all supported PHP versions",
+        "job": {
+            "php": "*",
+            "dependencies": "*",
+            "command": "vendor/bin/codecept run"
+        }
+    },
+    "exclude": [
+        {"name": "vendor/bin/codecept run on PHP 7.4"}
+    ]
+}
