@@ -9,7 +9,6 @@ on:
 
 jobs:
   qa:
-    continue-on-error: true
     name: Acceptance Tests
     runs-on: "ubuntu-latest"
     steps:
@@ -19,7 +18,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
+          php-version: "8.2"
           tools: "composer:v2"
         env:
           update: true
