@@ -23,6 +23,7 @@ vendor/bin/psalm-plugin enable boesing/psalm-plugin-stringf
 - Parses `sprintf` and `printf` arguments to verify if the number of passed arguments matches the amount of specifiers
 - Verifies if the return value of `sprintf` might be a `non-empty-string`
 - Verifies possibly invalid argument of `sprintf` and `printf` ([experimental](#report-possibly-invalid-argument-for-specifier))
+- Verifies unnecessary function calls of `sprintf` and `printf` ([experimental](#report-unnecessary-function-calls))
 
 ## Experimental
 
@@ -73,6 +74,27 @@ printf('%d', 'foo');
 PossiblyInvalidArgument: Argument 1 inferred as "string" does not match (any of) the suggested type(s) "float\|int\|numeric-string"
 ```
 
+### Report Unnecessary Function Calls
+
+```xml
+<pluginClass class="Boesing\PsalmPluginStringf\Plugin">
+    <experimental>
+        <ReportUnnecessaryFunctionCalls/>
+    </experimental>
+</pluginClass>
+```
+
+The `ReportUnnecessaryFunctionCalls` experimental feature will report `UnnecessaryFunctionCall` errors for
+function calls to `sprintf` or `printf` which can be omitted. Here are some examples:
+
+```php
+printf('Some text without any placeholder');
+sprintf('Some text without any placeholder');
+```
+
+```
+UnnecessaryFunctionCall: Function call is unnecessary as there is no placeholder within the template.
+```
 
 
 ## Release Versioning Disclaimer

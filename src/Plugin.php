@@ -7,6 +7,7 @@ namespace Boesing\PsalmPluginStringf;
 use Boesing\PsalmPluginStringf\EventHandler\PossiblyInvalidArgumentForSpecifierValidator;
 use Boesing\PsalmPluginStringf\EventHandler\SprintfFunctionReturnProvider;
 use Boesing\PsalmPluginStringf\EventHandler\StringfFunctionArgumentValidator;
+use Boesing\PsalmPluginStringf\EventHandler\UnnecessaryFunctionCallValidator;
 use Psalm\Plugin\PluginEntryPointInterface;
 use Psalm\Plugin\RegistrationInterface;
 use SimpleXMLElement;
@@ -21,6 +22,7 @@ final class Plugin implements PluginEntryPointInterface
 {
     private const EXPERIMENTAL_FEATURES = [
         'ReportPossiblyInvalidArgumentForSpecifier' => PossiblyInvalidArgumentForSpecifierValidator::class,
+        'ReportUnnecessaryFunctionCalls' => UnnecessaryFunctionCallValidator::class,
     ];
 
     public function __invoke(RegistrationInterface $registration, ?SimpleXMLElement $config = null): void
