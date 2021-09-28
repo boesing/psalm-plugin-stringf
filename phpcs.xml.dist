@@ -17,6 +17,7 @@
         <exclude name="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
         <exclude name="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn.UselessIfCondition"/>
         <exclude name="Generic.Files.LineLength.TooLong"/>
+        <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
     </rule>
 
     <file>src</file>
