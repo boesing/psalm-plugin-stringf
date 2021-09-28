@@ -8,7 +8,6 @@ use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
-use PhpParser\Node\Expr\FuncCall;
 use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\Issue\PossiblyInvalidArgument;
@@ -38,18 +37,14 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
     /** @psalm-var non-empty-list<Arg> */
     private array $arguments;
 
-    private FuncCall $functionCall;
-
     /**
      * @param non-empty-string    $functionName
      * @param non-empty-list<Arg> $arguments
      */
     public function __construct(
-        FuncCall $functionCall,
         string $functionName,
         array $arguments
     ) {
-        $this->functionCall = $functionCall;
         $this->functionName = $functionName;
         $this->arguments    = $arguments;
     }
@@ -74,7 +69,6 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         $context = $event->getContext();
 
         (new self(
-            $expression,
             $functionId,
             $arguments
         ))->assert(
