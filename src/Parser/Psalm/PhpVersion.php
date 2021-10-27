@@ -8,8 +8,6 @@ use Psalm\Codebase;
 use Psalm\StatementsSource;
 use Webmozart\Assert\Assert;
 
-use function assert;
-
 final class PhpVersion
 {
     /** @psalm-var positive-int */
@@ -47,10 +45,7 @@ final class PhpVersion
      */
     private function toVersionId(): int
     {
-        $versionId = $this->major * 10000 + $this->minor * 100;
-        assert($versionId > 0);
-
-        return $versionId;
+        return $this->major * 10000 + $this->minor * 100;
     }
 
     /**

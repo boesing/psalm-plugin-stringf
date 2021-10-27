@@ -59,9 +59,11 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
         }
 
         Assert::isNonEmptyList($arguments);
+        Assert::allIsInstanceOf($arguments, Arg::class);
 
         $context = $event->getContext();
 
+        /** @psalm-suppress InvalidScalarArgument */
         (new self(
             $functionId,
             $arguments

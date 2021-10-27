@@ -64,10 +64,12 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
             return;
         }
 
+        Assert::allIsInstanceOf($arguments, Arg::class);
         Assert::isNonEmptyList($arguments);
 
         $context = $event->getContext();
 
+        /** @psalm-suppress InvalidScalarArgument */
         (new self(
             $functionId,
             $arguments

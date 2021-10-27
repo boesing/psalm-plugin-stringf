@@ -46,6 +46,7 @@ final class Plugin implements PluginEntryPointInterface
         }
 
         foreach ($config->experimental->children() as $element) {
+            assert($element !== null);
             $name = $element->getName();
             if (! isset(self::EXPERIMENTAL_FEATURES[$name])) {
                 continue;

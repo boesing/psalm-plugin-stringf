@@ -17,6 +17,7 @@ use Psalm\Issue\TooManyArguments;
 use Psalm\IssueBuffer;
 use Psalm\Plugin\EventHandler\AfterEveryFunctionCallAnalysisInterface;
 use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
+use Webmozart\Assert\Assert;
 
 use function assert;
 use function count;
@@ -106,7 +107,8 @@ final class StringfFunctionArgumentValidator implements AfterEveryFunctionCallAn
             return;
         }
 
-        assert($arguments !== []);
+        Assert::isNonEmptyList($arguments);
+        Assert::allIsInstanceOf($arguments, Arg::class);
 
         (new self($functionCall, $functionId, $arguments))->validate(
             new CodeLocation($event->getStatementsSource(), $functionCall),
