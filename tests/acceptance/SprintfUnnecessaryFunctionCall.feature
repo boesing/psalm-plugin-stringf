@@ -15,6 +15,13 @@ Feature: unnecessary sprintf function call
           </experimental>
         </pluginClass>
       </plugins>
+      <issueHandlers>
+        <UnusedFunctionCall>
+          <errorLevel type="suppress">
+            <directory name="."/>
+          </errorLevel>
+        </UnusedFunctionCall>
+      </issueHandlers>
     </psalm>
     """
     And I have the following code preamble
@@ -32,6 +39,7 @@ Feature: unnecessary sprintf function call
     Then I see these errors
       | Type  | Message |
       | UnnecessaryFunctionCall | Function call is unnecessary as there is no placeholder within the template |
+    And I see no other errors
 
   Scenario: template contains no identifier
     Given I have the following code
@@ -42,3 +50,4 @@ Feature: unnecessary sprintf function call
     Then I see these errors
       | Type  | Message |
       | UnnecessaryFunctionCall | Function call is unnecessary as there is no placeholder within the template |
+    And I see no other errors
