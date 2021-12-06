@@ -32,6 +32,7 @@ Feature: unnecessary printf function call
     Then I see these errors
       | Type  | Message |
       | UnnecessaryFunctionCall | Function call is unnecessary as there is no placeholder within the template |
+    And I see no other errors
 
   Scenario: template contains no identifier
     Given I have the following code
@@ -42,3 +43,4 @@ Feature: unnecessary printf function call
     Then I see these errors
       | Type  | Message |
       | UnnecessaryFunctionCall | Function call is unnecessary as there is no placeholder within the template |
+    And I see no other errors

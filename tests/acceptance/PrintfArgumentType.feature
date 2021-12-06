@@ -41,6 +41,7 @@ Feature: printf argument type verification
       | Type  | Message |
       | PossiblyInvalidArgument | Argument 1 inferred as "int" does not match (any of) the suggested type(s) "string" |
       | PossiblyInvalidArgument | Argument 1 inferred as "float" does not match (any of) the suggested type(s) "string" |
+    And I see no other errors
 
   Scenario: template requires double but invalid values are passed
     Given I have the following code
@@ -51,6 +52,7 @@ Feature: printf argument type verification
     Then I see these errors
       | Type  | Message |
       | PossiblyInvalidArgument | Argument 1 inferred as "string" does not match (any of) the suggested type(s) "float\|int\|numeric-string" |
+    And I see no other errors
 
   Scenario: template requires double and called with a numeric-string
     Given I have the following code

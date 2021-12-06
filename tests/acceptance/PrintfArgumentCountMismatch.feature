@@ -34,6 +34,7 @@ Feature: printf argument count mismatch
     Then I see these errors
       | Type  | Message |
       | TooFewArguments | Template passed to function `printf` requires 1 specifier but 0 are passed. |
+    And I see no other errors
 
   Scenario: template has one specifier but two arguments provided
     Given I have the following code
@@ -44,6 +45,7 @@ Feature: printf argument count mismatch
     Then I see these errors
       | Type  | Message |
       | TooManyArguments | Template passed to function `printf` requires 1 specifier but 2 are passed. |
+    And I see no other errors
 
   Scenario: template has one specifier but repeated multiple times
     Given I have the following code
@@ -62,6 +64,7 @@ Feature: printf argument count mismatch
     Then I see these errors
       | Type  | Message |
       | TooFewArguments | Template passed to function `sscanf` declares 2 specifier but only 1 argument is passed. |
+    And I see no other errors
 
   Scenario: fscanf has two specifier but only one variable is passed to retrieve the result
     Given I have the following code
@@ -74,5 +77,5 @@ Feature: printf argument count mismatch
     Then I see these errors
       | Type  | Message |
       | TooFewArguments | Template passed to function `fscanf` declares 2 specifier but only 1 argument is passed. |
-
+    And I see no other errors
 

@@ -163,7 +163,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
   Scenario: template is empty but value which is passed to the string is boolean (true)
     Given I have the following code
     """
-      /** @psalm-suppress InvalidScalarArgument */
+      /** @psalm-suppress InvalidScalarArgument Ignore the fact that we are passing `true` to sprintf for testing purposes */
       $string = sprintf('%s', true);
       nonEmptyString($string);
     """
@@ -173,7 +173,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
   Scenario: template is empty and value which is passed to the string is boolean (false)
     Given I have the following code
     """
-      /** @psalm-suppress InvalidScalarArgument,PossiblyFalseArgument */
+      /** @psalm-suppress InvalidArgument Ignore the fact that we are passing `false` to sprintf for testing purposes */
       $string = sprintf('%s', false);
       nonEmptyString($string);
     """
@@ -181,6 +181,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     Then I see these errors
       | Type  | Message |
       | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
+    And I see no other errors
 
   Scenario: template is empty but value which is passed to the string is of type non-empty-string
     Given I have the following code
@@ -205,3 +206,4 @@ Feature: non empty template passed to sprintf results in non-empty-string
     Then I see these errors
       | Type  | Message |
       | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
+    And I see no other errors
