@@ -12,7 +12,7 @@
         "codeception/codeception": "^4.1",
         "doctrine/coding-standard": "^9.0",
         "codeception/module-phpbrowser": "^1.0",
-        "codeception/module-asserts": "^1.3",
+        "codeception/module-asserts": "^2.0",
         "weirdan/codeception-psalm-module": "^0.13.1"
     },
     "extra": {
