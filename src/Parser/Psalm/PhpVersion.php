@@ -31,9 +31,9 @@ final class PhpVersion
      */
     public static function fromCodebase(Codebase $codebase): int
     {
-        $major = $codebase->php_major_version;
+        $major = $codebase->getMajorAnalysisPhpVersion();
         Assert::positiveInteger($major);
-        $minor = $codebase->php_minor_version;
+        $minor = $codebase->getMinorAnalysisPhpVersion();
         Assert::greaterThanEq($minor, 0);
         /** @psalm-var 0|positive-int $minor */
 
