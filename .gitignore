@@ -1,8 +1,3 @@
 /vendor/
 /psalm.xml
 /phpcs.xml
-/tests/_output
-/tests/_run
-/tests/_support/_generated
-!/tests/_support
-!/tests/acceptance
