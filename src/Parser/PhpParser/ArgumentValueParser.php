@@ -89,6 +89,10 @@ final class ArgumentValueParser
                 : LiteralStringVariableInContextParser::parse($expr, $context);
         }
 
+        if ($expr instanceof Expr\ClassConstFetch || $expr instanceof Expr\ConstFetch) {
+            return VariableFromConstInContextParser::parse($expr, $context);
+        }
+
         throw new InvalidArgumentException(sprintf(self::UNPARSABLE_ARGUMENT_VALUE, $expr->getType()));
     }
 }
