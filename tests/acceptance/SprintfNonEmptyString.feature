@@ -210,3 +210,37 @@ Feature: non empty template passed to sprintf results in non-empty-string
       | Type  | Message |
       | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
     And I see no other errors
+
+  Scenario: template is non-empty and loaded from constant
+    Given I have the following code
+    """
+      namespace {
+        const CONSTANT_WITH_NON_EMPTY_STRING = 'bar baz %s';
+
+        final class Foo
+        {
+             public const CONSTANT_WITH_NON_EMPTY_STRING = 'foo bar %s';
+
+             /** @return non-empty-string */
+             public function createNonEmptyString(): string
+             {
+                  return sprintf(self::CONSTANT_WITH_NON_EMPTY_STRING, 'baz');
+             }
+        }
+
+        nonEmptyString(sprintf(Foo::CONSTANT_WITH_NON_EMPTY_STRING, 'baz'));
+        nonEmptyString(sprintf(\DifferentNamespace\Whatever::CONSTANT_WITH_NON_EMPTY_STRING, 'baz'));
+        /** @psalm-suppress ArgumentTypeCoercion Can be removed after https://github.com/vimeo/psalm/issues/7920 got fixed */
+        nonEmptyString(sprintf(\DifferentNamespace\CONSTANT_WITH_NON_EMPTY_STRING, 'baz'));
+        nonEmptyString(sprintf(CONSTANT_WITH_NON_EMPTY_STRING, 'baz'));
+      }
+      namespace DifferentNamespace {
+        const CONSTANT_WITH_NON_EMPTY_STRING = 'bar baz %s';
+        final class Whatever
+        {
+            public const CONSTANT_WITH_NON_EMPTY_STRING = 'foo bar %s';
+        }
+      }
+    """
+    When I run psalm
+    Then I see no errors
