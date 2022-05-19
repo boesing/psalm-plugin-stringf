@@ -5,7 +5,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     Given I have the following config
     """
     <?xml version="1.0"?>
-    <psalm errorLevel="1" findUnusedPsalmSuppress="true">
+    <psalm errorLevel="1">
       <projectFiles>
         <directory name="."/>
       </projectFiles>
@@ -23,6 +23,19 @@ Feature: non empty template passed to sprintf results in non-empty-string
     function nonEmptyString(string $_): void
     {}
     """
+
+  Scenario: template is empty but value which is passed to the string is boolean (true) (<5.0)
+    Given I have the following code
+    """
+      /**
+       * @psalm-suppress InvalidScalarArgument Ignore the fact that we are passing `true` to sprintf for testing purposes
+       * @psalm-suppress InvalidArgument With Psalm v5, `sprintf` usage with non-(`float`|`int`|`string`) is being reported.
+       */
+      $string = sprintf('%s', true);
+      nonEmptyString($string);
+    """
+    When I run Psalm
+    Then I see no errors
 
   Scenario: template contains a whitespace
     Given I have the following code
@@ -155,16 +168,6 @@ Feature: non empty template passed to sprintf results in non-empty-string
     Given I have the following code
     """
       $string = sprintf('%d', 0.9);
-      nonEmptyString($string);
-    """
-    When I run Psalm
-    Then I see no errors
-
-  Scenario: template is empty but value which is passed to the string is boolean (true)
-    Given I have the following code
-    """
-      /** @psalm-suppress InvalidScalarArgument Ignore the fact that we are passing `true` to sprintf for testing purposes */
-      $string = sprintf('%s', true);
       nonEmptyString($string);
     """
     When I run Psalm

@@ -138,8 +138,8 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                     sprintf(
                         'Argument %d inferred as "%s" does not match (any of) the suggested type(s) "%s"',
                         $placeholder->position,
-                        (string) $argumentType,
-                        (string) $type
+                        $argumentType->getId(),
+                        $type->getId()
                     ),
                     $codeLocation,
                     $this->functionName

@@ -1,0 +1,4 @@
+*
+!_support
+!_support/AcceptanceTester.php
+!.gitignore

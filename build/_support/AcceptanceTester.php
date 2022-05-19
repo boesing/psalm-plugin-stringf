@@ -23,4 +23,20 @@ class AcceptanceTester extends \Codeception\Actor
     /**
      * Define custom actions here
      */
+
+    /**
+     * @Given I have Psalm newer than :arg1 because of :arg2
+     */
+    public function iHavePsalmNewerThanBecauseOf($arg1, $arg2)
+    {
+        $this->havePsalmOfACertainVersionRangeBecauseOf('newer than', $arg1, $arg2);
+    }
+
+    /**
+     * @Given I have Psalm older than :arg1 because of :arg2
+     */
+    public function iHavePsalmOlderThanBecauseOf($arg1, $arg2)
+    {
+        $this->havePsalmOfACertainVersionRangeBecauseOf('older than', $arg1, $arg2);
+    }
 }
