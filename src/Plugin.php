@@ -58,7 +58,7 @@ final class Plugin implements PluginEntryPointInterface
     }
 
     /**
-     * @param array<non-empty-string,mixed> $options
+     * @param array<non-empty-string,string> $options
      */
     private function registerFeatureHook(
         RegistrationInterface $registration,
