@@ -7,6 +7,7 @@ namespace Boesing\PsalmPluginStringf\Parser\TemplatedStringParser;
 use Boesing\PsalmPluginStringf\Parser\PhpParser\ArgumentValueParser;
 use PhpParser\Node\Arg;
 use Psalm\Context;
+use Webmozart\Assert\Assert;
 
 use function array_filter;
 use function assert;
@@ -126,7 +127,7 @@ final class TemplatedStringParser
                 $maximumOrdinalPosition++;
             }
 
-            assert($placeholderPosition > 0);
+            Assert::positiveInteger($placeholderPosition);
             assert($placeholderValue !== '');
 
             $initialPlaceholderInstance = $placeholderInstances[$placeholderPosition] ?? null;
