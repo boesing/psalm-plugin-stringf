@@ -10,42 +10,15 @@ use Webmozart\Assert\Assert;
 
 final class PhpVersion
 {
-    /** @psalm-var positive-int */
-    private int $major;
-
-    /** @psalm-var 0|positive-int */
-    private int $minor;
-
-    /**
-     * @psalm-param positive-int $major
-     * @psalm-param 0|positive-int $minor
-     */
-    private function __construct(int $major, int $minor)
-    {
-        $this->major = $major;
-        $this->minor = $minor;
-    }
-
     /**
      * @psalm-return positive-int
      */
     public static function fromCodebase(Codebase $codebase): int
     {
-        $major = $codebase->getMajorAnalysisPhpVersion();
-        Assert::positiveInteger($major);
-        $minor = $codebase->getMinorAnalysisPhpVersion();
-        Assert::greaterThanEq($minor, 0);
-        /** @psalm-var 0|positive-int $minor */
+        $versionId = $codebase->analysis_php_version_id;
+        Assert::positiveInteger($versionId);
 
-        return (new self($major, $minor))->toVersionId();
-    }
-
-    /**
-     * @psalm-return positive-int
-     */
-    private function toVersionId(): int
-    {
-        return $this->major * 10000 + $this->minor * 100;
+        return $versionId;
     }
 
     /**
