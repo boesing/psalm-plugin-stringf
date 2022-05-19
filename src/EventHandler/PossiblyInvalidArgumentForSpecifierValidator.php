@@ -26,6 +26,8 @@ use function sprintf;
 
 final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFunctionCallAnalysisInterface
 {
+    public static bool $allowIntegerForStringPlaceholder = true;
+
     private const FUNCTIONS = [
         'sprintf',
         'printf',
@@ -95,7 +97,8 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                 $this->functionName,
                 $template,
                 $context,
-                $phpVersion
+                $phpVersion,
+                self::$allowIntegerForStringPlaceholder
             );
         } catch (InvalidArgumentException $exception) {
             return;
@@ -195,5 +198,17 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         }
 
         return true;
+    }
+
+    /**
+     * @param array<non-empty-string,string> $options
+     */
+    public static function applyOptions(array $options): void
+    {
+        if (! isset($options['allowIntegerForString']) || $options['allowIntegerForString'] === 'yes') {
+            return;
+        }
+
+        self::$allowIntegerForStringPlaceholder = false;
     }
 }

@@ -42,24 +42,29 @@ final class TemplatedStringParser
 
     private string $template;
 
+    private bool $allowIntegerForStringPlaceholder;
+
     /**
      * @psalm-param positive-int $phpVersion
      */
     private function __construct(
         string $functionName,
         string $template,
-        int $phpVersion
+        int $phpVersion,
+        bool $allowIntegerForStringPlaceholder
     ) {
         $this->template                   = $template;
         $this->templateWithoutPlaceholder = $template;
         $this->placeholders               = [];
-        $this->parse($functionName, $template, $phpVersion);
+        $this->parse($functionName, $template, $phpVersion, $allowIntegerForStringPlaceholder);
+        $this->allowIntegerForStringPlaceholder = $allowIntegerForStringPlaceholder;
     }
 
     private function parse(
         string $functionName,
         string $template,
-        int $phpVersion
+        int $phpVersion,
+        bool $allowIntegerForStringPlaceholder
     ): void {
         $additionalSpecifierDependingOnPhpVersion = '';
         if ($phpVersion >= 80000) {
@@ -133,7 +138,8 @@ final class TemplatedStringParser
             $initialPlaceholderInstance = $placeholderInstances[$placeholderPosition] ?? null;
             $placeholderInstance        = Placeholder::create(
                 $placeholderValue,
-                $placeholderPosition
+                $placeholderPosition,
+                $allowIntegerForStringPlaceholder
             );
 
             if ($initialPlaceholderInstance !== null) {
@@ -153,12 +159,14 @@ final class TemplatedStringParser
         string $functionName,
         Arg $templateArgument,
         Context $context,
-        int $phpVersion
+        int $phpVersion,
+        bool $allowIntegerForStringPlaceholder
     ): self {
         return new self(
             $functionName,
             ArgumentValueParser::create($templateArgument->value, $context)->toString(),
-            $phpVersion
+            $phpVersion,
+            $allowIntegerForStringPlaceholder
         );
     }
 

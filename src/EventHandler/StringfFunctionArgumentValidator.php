@@ -135,7 +135,8 @@ final class StringfFunctionArgumentValidator implements AfterEveryFunctionCallAn
                 $this->functionName,
                 $template,
                 $context,
-                $phpVersion
+                $phpVersion,
+                false
             );
         } catch (InvalidArgumentException $exception) {
             return;
