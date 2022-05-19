@@ -13,4 +13,12 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <RedundantCondition>
+            <!-- Lets keep these issues as info-level until we remove support for psalm v4 -->
+            <errorLevel type="info">
+                <directory name="src"/>
+            </errorLevel>
+        </RedundantCondition>
+    </issueHandlers>
 </psalm>
