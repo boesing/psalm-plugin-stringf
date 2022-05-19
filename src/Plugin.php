@@ -46,18 +46,25 @@ final class Plugin implements PluginEntryPointInterface
         }
 
         foreach ($config->experimental->children() as $element) {
-            assert($element !== null);
+            assert($element instanceof SimpleXMLElement);
             $name = $element->getName();
             if (! isset(self::EXPERIMENTAL_FEATURES[$name])) {
                 continue;
             }
 
-            $this->registerFeatureHook($registration, $name);
+            $options = $this->extractOptionsFromElement($element);
+            $this->registerFeatureHook($registration, $name, $options);
         }
     }
 
-    private function registerFeatureHook(RegistrationInterface $registration, string $featureName): void
-    {
+    /**
+     * @param array<non-empty-string,mixed> $options
+     */
+    private function registerFeatureHook(
+        RegistrationInterface $registration,
+        string $featureName,
+        array $options
+    ): void {
         $eventHandlerClassName = self::EXPERIMENTAL_FEATURES[$featureName];
 
         $fileName =  __DIR__ . sprintf(
@@ -68,5 +75,28 @@ final class Plugin implements PluginEntryPointInterface
         require_once $fileName;
 
         $registration->registerHooksFromClass($eventHandlerClassName);
+        if ($eventHandlerClassName !== PossiblyInvalidArgumentForSpecifierValidator::class) {
+            return;
+        }
+
+        $eventHandlerClassName::applyOptions($options);
+    }
+
+    /**
+     * @return array<non-empty-string,string>
+     */
+    private function extractOptionsFromElement(SimpleXMLElement $element): array
+    {
+        $options = [];
+
+        foreach ($element->attributes() ?? [] as $attribute) {
+            assert($attribute instanceof SimpleXMLElement);
+            $name = $attribute->getName();
+            assert($name !== '');
+
+            $options[$name] = (string) $attribute;
+        }
+
+        return $options;
     }
 }

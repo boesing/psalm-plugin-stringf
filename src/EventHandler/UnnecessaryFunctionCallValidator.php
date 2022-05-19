@@ -89,7 +89,8 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
                 $this->functionName,
                 $template,
                 $context,
-                $phpVersion
+                $phpVersion,
+                false
             );
         } catch (InvalidArgumentException $exception) {
             return;

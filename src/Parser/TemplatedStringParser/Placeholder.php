@@ -27,25 +27,28 @@ final class Placeholder
 
     private ?Union $type;
 
+    private bool $allowIntegerForStringPlaceholder;
+
     /**
      * @psalm-param non-empty-string $value
      * @psalm-param positive-int $position
      */
-    private function __construct(string $value, int $position)
+    private function __construct(string $value, int $position, bool $allowIntegerForStringPlaceholder)
     {
-        $this->value             = $value;
-        $this->position          = $position;
-        $this->argumentValueType = null;
-        $this->type              = null;
+        $this->value                            = $value;
+        $this->position                         = $position;
+        $this->argumentValueType                = null;
+        $this->type                             = null;
+        $this->allowIntegerForStringPlaceholder = $allowIntegerForStringPlaceholder;
     }
 
     /**
      * @psalm-param non-empty-string $value
      * @psalm-param positive-int $position
      */
-    public static function create(string $value, int $position): self
+    public static function create(string $value, int $position, bool $allowIntegerForStringPlaceholder): self
     {
-        return new self($value, $position);
+        return new self($value, $position, $allowIntegerForStringPlaceholder);
     }
 
     /**
@@ -139,13 +142,13 @@ final class Placeholder
         }
 
         try {
-            $type = SpecifierTypeGenerator::create($this->value)->getSuggestedType();
+            $type = SpecifierTypeGenerator::create($this->value, $this->allowIntegerForStringPlaceholder)->getSuggestedType();
         } catch (InvalidArgumentException $exception) {
             return null;
         }
 
         if ($this->repeated === []) {
-            return $type;
+            return $this->type = $type;
         }
 
         $unions = [$type];

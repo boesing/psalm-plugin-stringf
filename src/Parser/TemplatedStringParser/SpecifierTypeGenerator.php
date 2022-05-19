@@ -20,27 +20,30 @@ final class SpecifierTypeGenerator
     /** @psalm-var non-empty-string */
     private string $specifier;
 
+    private bool $allowIntegerForStringPlaceholder;
+
     /**
      * @psalm-param non-empty-string $specifier
      */
-    private function __construct(string $specifier)
+    private function __construct(string $specifier, bool $allowIntegerForStringPlaceholder)
     {
-        $this->specifier = $this->parse($specifier);
+        $this->specifier                        = $this->parse($specifier);
+        $this->allowIntegerForStringPlaceholder = $allowIntegerForStringPlaceholder;
     }
 
     /**
      * @psalm-param non-empty-string $specifier
      */
-    public static function create(string $specifier): self
+    public static function create(string $specifier, bool $allowIntegerForStringPlaceholder): self
     {
-        return new self($specifier);
+        return new self($specifier, $allowIntegerForStringPlaceholder);
     }
 
     public function getSuggestedType(): Type\Union
     {
         switch ($this->specifier) {
             case 's':
-                return Type::getString();
+                return $this->stringable();
 
             case 'd':
             case 'f':
@@ -79,5 +82,18 @@ final class SpecifierTypeGenerator
             new Type\Atomic\TFloat(),
             new Type\Atomic\TNumericString(),
         ]);
+    }
+
+    private function stringable(): Type\Union
+    {
+        $types = [
+            new Type\Atomic\TString(),
+        ];
+
+        if ($this->allowIntegerForStringPlaceholder) {
+            $types[] = new Type\Atomic\TInt();
+        }
+
+        return new Type\Union($types);
     }
 }

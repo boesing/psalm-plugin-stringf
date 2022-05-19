@@ -49,7 +49,7 @@ Experimental features can be enabled by extending the plugin configuration as fo
 ```xml
 <pluginClass class="Boesing\PsalmPluginStringf\Plugin">
     <experimental>
-        <ReportPossiblyInvalidArgumentForSpecifier/>
+        <ReportPossiblyInvalidArgumentForSpecifier allowIntegerForString="yes" />
     </experimental>
 </pluginClass>
 ```

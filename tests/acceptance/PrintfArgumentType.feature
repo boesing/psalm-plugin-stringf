@@ -39,8 +39,7 @@ Feature: printf argument type verification
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | PossiblyInvalidArgument | Argument 1 inferred as "1" does not match (any of) the suggested type(s) "string" |
-      | PossiblyInvalidArgument | Argument 1 inferred as "float(1.035)" does not match (any of) the suggested type(s) "string" |
+      | PossiblyInvalidArgument | Argument 1 inferred as "float(1.035)" does not match (any of) the suggested type(s) "int\|string" |
     And I see no other errors
 
   Scenario: template requires double but invalid values are passed
