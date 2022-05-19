@@ -200,6 +200,9 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         return true;
     }
 
+    /**
+     * @param array<non-empty-string,string> $options
+     */
     public static function applyOptions(array $options): void
     {
         if (! isset($options['allowIntegerForString']) || $options['allowIntegerForString'] === 'yes') {
