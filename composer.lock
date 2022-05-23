@@ -2624,21 +2624,21 @@
         },
         {
             "name": "codeception/module-phpbrowser",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/module-phpbrowser.git",
-                "reference": "fda6d97253d0595843adb87ec0b9b7d6d89539ac"
+                "reference": "21338dc28ac82a63344224cc765a8ff2964b4a84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/module-phpbrowser/zipball/fda6d97253d0595843adb87ec0b9b7d6d89539ac",
-                "reference": "fda6d97253d0595843adb87ec0b9b7d6d89539ac",
+                "url": "https://api.github.com/repos/Codeception/module-phpbrowser/zipball/21338dc28ac82a63344224cc765a8ff2964b4a84",
+                "reference": "21338dc28ac82a63344224cc765a8ff2964b4a84",
                 "shasum": ""
             },
             "require": {
-                "codeception/codeception": "^4.1 | *@dev",
-                "codeception/lib-innerbrowser": "^2.0 | *@dev",
+                "codeception/codeception": "^4.1",
+                "codeception/lib-innerbrowser": "^2.0",
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.4",
                 "php": "^7.4 | ^8.0"
@@ -2648,7 +2648,7 @@
             },
             "require-dev": {
                 "aws/aws-sdk-php": "^3.199",
-                "codeception/module-rest": "^2.0 | *@dev",
+                "codeception/module-rest": "^2.0",
                 "ext-curl": "*"
             },
             "suggest": {
@@ -2681,22 +2681,22 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeception/module-phpbrowser/issues",
-                "source": "https://github.com/Codeception/module-phpbrowser/tree/2.0.2"
+                "source": "https://github.com/Codeception/module-phpbrowser/tree/2.0.3"
             },
-            "time": "2021-12-21T15:16:28+00:00"
+            "time": "2022-05-21T13:48:15+00:00"
         },
         {
             "name": "codeception/phpunit-wrapper",
-            "version": "9.0.7",
+            "version": "9.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/phpunit-wrapper.git",
-                "reference": "7d6b1a5ea4ed28d010e5d36b993db813eb49710b"
+                "reference": "7439a53ae367986e9c22b2ac00f9d7376bb2f8cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/phpunit-wrapper/zipball/7d6b1a5ea4ed28d010e5d36b993db813eb49710b",
-                "reference": "7d6b1a5ea4ed28d010e5d36b993db813eb49710b",
+                "url": "https://api.github.com/repos/Codeception/phpunit-wrapper/zipball/7439a53ae367986e9c22b2ac00f9d7376bb2f8cf",
+                "reference": "7439a53ae367986e9c22b2ac00f9d7376bb2f8cf",
                 "shasum": ""
             },
             "require": {
@@ -2730,9 +2730,9 @@
             "description": "PHPUnit classes used by Codeception",
             "support": {
                 "issues": "https://github.com/Codeception/phpunit-wrapper/issues",
-                "source": "https://github.com/Codeception/phpunit-wrapper/tree/9.0.7"
+                "source": "https://github.com/Codeception/phpunit-wrapper/tree/9.0.9"
             },
-            "time": "2022-01-26T14:43:10+00:00"
+            "time": "2022-05-23T06:24:11+00:00"
         },
         {
             "name": "codeception/stub",
