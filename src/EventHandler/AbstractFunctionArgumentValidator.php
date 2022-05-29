@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Boesing\PsalmPluginStringf\EventHandler;
 
+use Boesing\PsalmPluginStringf\ArgumentValidator\ArgumentValidatorInterface;
 use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
@@ -20,7 +21,6 @@ use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
 use Psalm\StatementsSource;
 
 use function assert;
-use function count;
 use function sprintf;
 
 /**
@@ -50,6 +50,8 @@ abstract class AbstractFunctionArgumentValidator implements AfterEveryFunctionCa
      * @return non-empty-string
      */
     abstract protected function getIssueTemplate(): string;
+
+    abstract protected function getArgumentValidator(): ArgumentValidatorInterface;
 
     private function createCodeIssue(
         CodeLocation $codeLocation,
@@ -158,18 +160,18 @@ abstract class AbstractFunctionArgumentValidator implements AfterEveryFunctionCa
             return;
         }
 
-        $argumentCount         = count($arguments) - $templateArgumentIndex - 1;
-        $requiredArgumentCount = $parsed->getPlaceholderCount();
+        $validator        = $this->getArgumentValidator();
+        $validationResult = $validator->validate($parsed, $arguments);
 
-        if ($argumentCount === $requiredArgumentCount) {
+        if ($validationResult->valid()) {
             return;
         }
 
         IssueBuffer::add($this->createCodeIssue(
             $this->codeLocation,
             $functionName,
-            $argumentCount,
-            $requiredArgumentCount
+            $validationResult->actualArgumentCount,
+            $validationResult->requiredArgumentCount
         ));
     }
 }

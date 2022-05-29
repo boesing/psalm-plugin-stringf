@@ -193,6 +193,9 @@ final class TemplatedStringParser
         return $this->placeholders;
     }
 
+    /**
+     * @return 0|positive-int
+     */
     public function getPlaceholderCount(): int
     {
         // TODO: normalize as %1$s is the same as %s, e.g.

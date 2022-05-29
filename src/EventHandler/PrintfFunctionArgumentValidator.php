@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Boesing\PsalmPluginStringf\EventHandler;
 
+use Boesing\PsalmPluginStringf\ArgumentValidator\ArgumentValidatorInterface;
+use Boesing\PsalmPluginStringf\ArgumentValidator\PrintfArgumentValidator;
+
 use function in_array;
 
 final class PrintfFunctionArgumentValidator extends AbstractFunctionArgumentValidator
@@ -30,5 +33,10 @@ final class PrintfFunctionArgumentValidator extends AbstractFunctionArgumentVali
     protected function canHandleFunction(string $functionId): bool
     {
         return in_array($functionId, self::FUNCTIONS, true);
+    }
+
+    protected function getArgumentValidator(): ArgumentValidatorInterface
+    {
+        return new PrintfArgumentValidator();
     }
 }
