@@ -18,7 +18,7 @@ final class ScanfFunctionArgumentValidator extends FunctionArgumentValidator
 
     private const TEMPLATE_ARGUMENT_INDEX = 1;
 
-    private const ISSUE_TEMPLATE = 'Template passed to function `%s` declares %d specifier but only %d  argument is passed.';
+    private const ISSUE_TEMPLATE = 'Template passed to function `%s` declares %d specifier but only %d argument is passed.';
 
     protected function getTemplateArgumentIndex(): int
     {
