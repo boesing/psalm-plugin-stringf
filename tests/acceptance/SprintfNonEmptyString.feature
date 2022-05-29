@@ -24,7 +24,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     {}
     """
 
-  Scenario: template is empty but value which is passed to the string is boolean (true) (<5.0)
+  Scenario: template is empty but value which is passed to the string is boolean (true)
     Given I have the following code
     """
       /**
