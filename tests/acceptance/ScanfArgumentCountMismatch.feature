@@ -59,3 +59,12 @@ Feature: scanf argument count mismatch
     When I run psalm
     Then I see no errors
 
+  Scenario: fscanf is returning the values of the parameters in case no parameters are passed
+    Given I have the following code
+    """
+      $result = fscanf(STDIN, '%d');
+      assert(isset($result[0]));
+    """
+    When I run psalm
+    Then I see no errors
+
