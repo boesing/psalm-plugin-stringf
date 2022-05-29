@@ -9,7 +9,7 @@ use Boesing\PsalmPluginStringf\ArgumentValidator\ScanfArgumentValidator;
 
 use function in_array;
 
-final class ScanfFunctionArgumentValidator extends AbstractFunctionArgumentValidator
+final class ScanfFunctionArgumentValidator extends FunctionArgumentValidator
 {
     private const FUNCTIONS = [
         'sscanf',

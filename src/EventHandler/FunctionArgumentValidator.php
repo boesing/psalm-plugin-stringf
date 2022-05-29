@@ -27,7 +27,7 @@ use function sprintf;
 /**
  * @psalm-consistent-constructor
  */
-abstract class AbstractFunctionArgumentValidator implements AfterEveryFunctionCallAnalysisInterface
+abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalysisInterface
 {
     protected StatementsSource $statementsSource;
 

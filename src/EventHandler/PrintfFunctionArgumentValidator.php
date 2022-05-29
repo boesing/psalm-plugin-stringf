@@ -9,7 +9,7 @@ use Boesing\PsalmPluginStringf\ArgumentValidator\StringfArgumentValidator;
 
 use function in_array;
 
-final class PrintfFunctionArgumentValidator extends AbstractFunctionArgumentValidator
+final class PrintfFunctionArgumentValidator extends FunctionArgumentValidator
 {
     private const FUNCTIONS = [
         'sprintf',
