@@ -7,6 +7,7 @@ namespace Boesing\PsalmPluginStringf\Parser\TemplatedStringParser;
 use Boesing\PsalmPluginStringf\Parser\PhpParser\ArgumentValueParser;
 use PhpParser\Node\Arg;
 use Psalm\Context;
+use Psalm\StatementsSource;
 use Webmozart\Assert\Assert;
 
 use function array_filter;
@@ -42,7 +43,7 @@ final class TemplatedStringParser
 
     private string $template;
 
-    private bool $allowIntegerForStringPlaceholder;
+    private StatementsSource $statementsSource;
 
     /**
      * @psalm-param positive-int $phpVersion
@@ -51,13 +52,14 @@ final class TemplatedStringParser
         string $functionName,
         string $template,
         int $phpVersion,
-        bool $allowIntegerForStringPlaceholder
+        bool $allowIntegerForStringPlaceholder,
+        StatementsSource $statementsSource
     ) {
         $this->template                   = $template;
         $this->templateWithoutPlaceholder = $template;
         $this->placeholders               = [];
+        $this->statementsSource           = $statementsSource;
         $this->parse($functionName, $template, $phpVersion, $allowIntegerForStringPlaceholder);
-        $this->allowIntegerForStringPlaceholder = $allowIntegerForStringPlaceholder;
     }
 
     private function parse(
@@ -139,7 +141,8 @@ final class TemplatedStringParser
             $placeholderInstance        = Placeholder::create(
                 $placeholderValue,
                 $placeholderPosition,
-                $allowIntegerForStringPlaceholder
+                $allowIntegerForStringPlaceholder,
+                $this->statementsSource
             );
 
             if ($initialPlaceholderInstance !== null) {
@@ -160,13 +163,15 @@ final class TemplatedStringParser
         Arg $templateArgument,
         Context $context,
         int $phpVersion,
-        bool $allowIntegerForStringPlaceholder
+        bool $allowIntegerForStringPlaceholder,
+        StatementsSource $statementsSource
     ): self {
         return new self(
             $functionName,
             ArgumentValueParser::create($templateArgument->value, $context)->toString(),
             $phpVersion,
-            $allowIntegerForStringPlaceholder
+            $allowIntegerForStringPlaceholder,
+            $statementsSource
         );
     }
 

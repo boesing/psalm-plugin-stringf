@@ -14,6 +14,7 @@ use Psalm\Context;
 use Psalm\IssueBuffer;
 use Psalm\Plugin\EventHandler\AfterEveryFunctionCallAnalysisInterface;
 use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
+use Psalm\StatementsSource;
 use Webmozart\Assert\Assert;
 
 use function in_array;
@@ -61,14 +62,16 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
         Assert::isNonEmptyList($arguments);
         Assert::allIsInstanceOf($arguments, Arg::class);
 
-        $context = $event->getContext();
+        $context          = $event->getContext();
+        $statementsSource = $event->getStatementsSource();
 
         /** @psalm-suppress InvalidScalarArgument */
         (new self(
             $functionId,
             $arguments
         ))->assert(
-            new CodeLocation($event->getStatementsSource(), $expression),
+            $statementsSource,
+            new CodeLocation($statementsSource, $expression),
             $context,
             PhpVersion::fromCodebase($event->getCodebase())
         );
@@ -78,6 +81,7 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
      * @psalm-param positive-int $phpVersion
      */
     private function assert(
+        StatementsSource $statementsSource,
         CodeLocation $codeLocation,
         Context $context,
         int $phpVersion
@@ -90,7 +94,8 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
                 $template,
                 $context,
                 $phpVersion,
-                false
+                false,
+                $statementsSource
             );
         } catch (InvalidArgumentException $exception) {
             return;

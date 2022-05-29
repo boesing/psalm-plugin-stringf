@@ -17,6 +17,7 @@ use Psalm\Issue\TooManyArguments;
 use Psalm\IssueBuffer;
 use Psalm\Plugin\EventHandler\AfterEveryFunctionCallAnalysisInterface;
 use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
+use Psalm\StatementsSource;
 use Webmozart\Assert\Assert;
 
 use function assert;
@@ -110,8 +111,11 @@ final class StringfFunctionArgumentValidator implements AfterEveryFunctionCallAn
         Assert::isNonEmptyList($arguments);
         Assert::allIsInstanceOf($arguments, Arg::class);
 
+        $statementsSource = $event->getStatementsSource();
+
         (new self($functionCall, $functionId, $arguments))->validate(
-            new CodeLocation($event->getStatementsSource(), $functionCall),
+            $statementsSource,
+            new CodeLocation($statementsSource, $functionCall),
             $argumentIndex,
             $event->getContext(),
             PhpVersion::fromCodebase($event->getCodebase())
@@ -123,6 +127,7 @@ final class StringfFunctionArgumentValidator implements AfterEveryFunctionCallAn
      * @psalm-param positive-int $phpVersion
      */
     private function validate(
+        StatementsSource $statementsSource,
         CodeLocation $codeLocation,
         int $templateArgumentIndex,
         Context $context,
@@ -136,7 +141,8 @@ final class StringfFunctionArgumentValidator implements AfterEveryFunctionCallAn
                 $template,
                 $context,
                 $phpVersion,
-                false
+                false,
+                $statementsSource
             );
         } catch (InvalidArgumentException $exception) {
             return;

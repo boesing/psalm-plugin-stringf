@@ -39,13 +39,15 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
 
         $templateArgument = $functionCallArguments[self::TEMPLATE_ARGUMENT_POSITION];
         $context          = $event->getContext();
+        $statementSource  = $event->getStatementsSource();
         try {
             $parser = TemplatedStringParser::fromArgument(
                 $functionName,
                 $templateArgument,
                 $context,
-                PhpVersion::fromStatementSource($event->getStatementsSource()),
-                false
+                PhpVersion::fromStatementSource($statementSource),
+                false,
+                $statementSource
             );
         } catch (InvalidArgumentException $exception) {
             return null;

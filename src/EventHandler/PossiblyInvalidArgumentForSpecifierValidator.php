@@ -14,6 +14,7 @@ use Psalm\Issue\PossiblyInvalidArgument;
 use Psalm\IssueBuffer;
 use Psalm\Plugin\EventHandler\AfterEveryFunctionCallAnalysisInterface;
 use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
+use Psalm\StatementsSource;
 use Psalm\Type\Atomic;
 use Psalm\Type\Atomic\TLiteralString;
 use Psalm\Type\Atomic\TNumericString;
@@ -69,14 +70,16 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         Assert::allIsInstanceOf($arguments, Arg::class);
         Assert::isNonEmptyList($arguments);
 
-        $context = $event->getContext();
+        $context          = $event->getContext();
+        $statementsSource = $event->getStatementsSource();
 
         /** @psalm-suppress InvalidScalarArgument */
         (new self(
             $functionId,
             $arguments
         ))->assert(
-            new CodeLocation($event->getStatementsSource(), $expression),
+            $statementsSource,
+            new CodeLocation($statementsSource, $expression),
             $context,
             PhpVersion::fromCodebase($event->getCodebase())
         );
@@ -86,6 +89,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
      * @psalm-param positive-int $phpVersion
      */
     public function assert(
+        StatementsSource $statementsSource,
         CodeLocation $codeLocation,
         Context $context,
         int $phpVersion
@@ -98,7 +102,8 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                 $template,
                 $context,
                 $phpVersion,
-                self::$allowIntegerForStringPlaceholder
+                self::$allowIntegerForStringPlaceholder,
+                $statementsSource
             );
         } catch (InvalidArgumentException $exception) {
             return;

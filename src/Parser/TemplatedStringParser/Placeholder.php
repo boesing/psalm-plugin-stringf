@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Boesing\PsalmPluginStringf\Parser\TemplatedStringParser;
 
 use Boesing\PsalmPluginStringf\Parser\PhpParser\ArgumentValueParser;
+use Boesing\PsalmPluginStringf\Parser\PhpParser\ReturnTypeParser;
 use Boesing\PsalmPluginStringf\Parser\Psalm\TypeParser;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
+use PhpParser\Node\Expr;
 use Psalm\Context;
+use Psalm\StatementsSource;
 use Psalm\Type\Atomic\TNonEmptyString;
 use Psalm\Type\Union;
 
@@ -29,39 +32,33 @@ final class Placeholder
 
     private bool $allowIntegerForStringPlaceholder;
 
+    private StatementsSource $statementsSource;
+
     /**
      * @psalm-param non-empty-string $value
      * @psalm-param positive-int $position
      */
-    private function __construct(string $value, int $position, bool $allowIntegerForStringPlaceholder)
-    {
+    private function __construct(
+        string $value,
+        int $position,
+        bool $allowIntegerForStringPlaceholder,
+        StatementsSource $statementsSource
+    ) {
         $this->value                            = $value;
         $this->position                         = $position;
         $this->argumentValueType                = null;
         $this->type                             = null;
         $this->allowIntegerForStringPlaceholder = $allowIntegerForStringPlaceholder;
+        $this->statementsSource                 = $statementsSource;
     }
 
     /**
      * @psalm-param non-empty-string $value
      * @psalm-param positive-int $position
      */
-    public static function create(string $value, int $position, bool $allowIntegerForStringPlaceholder): self
+    public static function create(string $value, int $position, bool $allowIntegerForStringPlaceholder, StatementsSource $statementsSource): self
     {
-        return new self($value, $position, $allowIntegerForStringPlaceholder);
-    }
-
-    /**
-     * @psalm-param non-empty-list<Arg> $functionCallArguments
-     */
-    public function getArgumentValue(array $functionCallArguments, Context $context): ?string
-    {
-        $type = $this->getArgumentType($functionCallArguments, $context);
-        if ($type === null) {
-            return null;
-        }
-
-        return TypeParser::create($type)->stringify();
+        return new self($value, $position, $allowIntegerForStringPlaceholder, $statementsSource);
     }
 
     /**
@@ -98,7 +95,7 @@ final class Placeholder
         }
 
         try {
-            $this->argumentValueType = ArgumentValueParser::create($argument->value, $context)->toType();
+            $this->argumentValueType = $this->getArgumentValueType($argument->value, $context);
         } catch (InvalidArgumentException $exception) {
             return null;
         }
@@ -170,5 +167,14 @@ final class Placeholder
         }
 
         return $this->type = new Union($types);
+    }
+
+    private function getArgumentValueType(Expr $value, Context $context): Union
+    {
+        if ($value instanceof Expr\FuncCall || $value instanceof Expr\StaticCall || $value instanceof Expr\MethodCall) {
+            return ReturnTypeParser::create($this->statementsSource, $context, $value)->toType();
+        }
+
+        return ArgumentValueParser::create($value, $context)->toType();
     }
 }
