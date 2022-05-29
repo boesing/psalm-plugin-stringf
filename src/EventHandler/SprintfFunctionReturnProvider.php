@@ -45,7 +45,7 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
                 $functionName,
                 $templateArgument,
                 $context,
-                PhpVersion::fromStatementSource($statementSource),
+                PhpVersion::fromStatementSource($statementSource)->versionId,
                 false,
                 $statementSource
             );

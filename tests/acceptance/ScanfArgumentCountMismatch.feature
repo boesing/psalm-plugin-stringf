@@ -49,3 +49,13 @@ Feature: scanf argument count mismatch
       | TooFewArguments | Template passed to function `fscanf` declares 2 specifier but only 1 argument is passed. |
     And I see no other errors
 
+  Scenario: sscanf is returning the values of the parameters in case no parameters are passed
+    Given I have the following code
+    """
+      $value = '1';
+      [$period] = sscanf($value, '%d');
+      assert($period !== null);
+    """
+    When I run psalm
+    Then I see no errors
+
