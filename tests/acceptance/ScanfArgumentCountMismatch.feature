@@ -1,4 +1,4 @@
-Feature: printf argument count mismatch
+Feature: scanf argument count mismatch
 
   Background:
     Given I have the following config
@@ -25,32 +25,27 @@ Feature: printf argument count mismatch
     <?php declare(strict_types=1);
     """
 
-  Scenario: template has one specifier but zero arguments provided
+  Scenario: sscanf has two specifier but only one variable is passed to retrieve the result
     Given I have the following code
     """
-      printf('%s');
+      sscanf('1', '%d %d', $number);
     """
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | TooFewArguments | Template passed to function `printf` requires 1 specifier but 0 are passed. |
+      | TooFewArguments | Template passed to function `sscanf` declares 2 specifier but only 1 argument is passed. |
     And I see no other errors
 
-  Scenario: template has one specifier but two arguments provided
+  Scenario: fscanf has two specifier but only one variable is passed to retrieve the result
     Given I have the following code
     """
-      printf('%s', '', '');
+      /** @psalm-var resource $resource */
+      $resource = null;
+      fscanf($resource, '%s %f', $foo);
     """
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | TooManyArguments | Template passed to function `printf` requires 1 specifier but 2 are passed. |
+      | TooFewArguments | Template passed to function `fscanf` declares 2 specifier but only 1 argument is passed. |
     And I see no other errors
 
-  Scenario: template has one specifier but repeated multiple times
-    Given I have the following code
-    """
-      printf('%s %1$s, foo bar, %1$s', '');
-    """
-    When I run Psalm
-    Then I see no errors
