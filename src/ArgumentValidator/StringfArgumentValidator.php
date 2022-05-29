@@ -9,7 +9,7 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\VariadicPlaceholder;
 use Webmozart\Assert\Assert;
 
-final class StringfArgumentValidator implements ArgumentValidatorInterface
+final class StringfArgumentValidator implements ArgumentValidator
 {
     /** @var 0|positive-int */
     private int $argumentsPriorPlaceholderArgumentsStart;

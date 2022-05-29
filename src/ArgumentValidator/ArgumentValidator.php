@@ -8,7 +8,7 @@ use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParse
 use PhpParser\Node\Arg;
 use PhpParser\Node\VariadicPlaceholder;
 
-interface ArgumentValidatorInterface
+interface ArgumentValidator
 {
     /**
      * @param array<Arg|VariadicPlaceholder> $arguments

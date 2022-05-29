@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Boesing\PsalmPluginStringf\EventHandler;
 
-use Boesing\PsalmPluginStringf\ArgumentValidator\ArgumentValidatorInterface;
+use Boesing\PsalmPluginStringf\ArgumentValidator\ArgumentValidator;
 use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
@@ -55,7 +55,7 @@ abstract class AbstractFunctionArgumentValidator implements AfterEveryFunctionCa
      */
     abstract protected function getIssueTemplate(): string;
 
-    abstract protected function getArgumentValidator(): ArgumentValidatorInterface;
+    abstract protected function getArgumentValidator(): ArgumentValidator;
 
     private function createCodeIssue(
         CodeLocation $codeLocation,

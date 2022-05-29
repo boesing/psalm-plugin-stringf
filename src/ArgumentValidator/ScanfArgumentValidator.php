@@ -6,9 +6,9 @@ namespace Boesing\PsalmPluginStringf\ArgumentValidator;
 
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 
-final class ScanfArgumentValidator implements ArgumentValidatorInterface
+final class ScanfArgumentValidator implements ArgumentValidator
 {
-    private ArgumentValidatorInterface $printfArgumentValidator;
+    private ArgumentValidator $printfArgumentValidator;
 
     public function __construct()
     {
