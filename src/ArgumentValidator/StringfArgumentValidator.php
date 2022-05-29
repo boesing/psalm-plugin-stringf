@@ -9,12 +9,23 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\VariadicPlaceholder;
 use Webmozart\Assert\Assert;
 
-final class PrintfArgumentValidator implements ArgumentValidatorInterface
+final class StringfArgumentValidator implements ArgumentValidatorInterface
 {
+    /** @var 0|positive-int */
+    private int $argumentsPriorPlaceholderArgumentsStart;
+
+    /**
+     * @param 0|positive-int $argumentsPriorPlaceholderArgumentsStart
+     */
+    public function __construct(int $argumentsPriorPlaceholderArgumentsStart)
+    {
+        $this->argumentsPriorPlaceholderArgumentsStart = $argumentsPriorPlaceholderArgumentsStart;
+    }
+
     public function validate(TemplatedStringParser $templatedStringParser, array $arguments): ArgumentValidationResult
     {
         $requiredArgumentCount = $templatedStringParser->getPlaceholderCount();
-        $currentArgumentCount  = $this->countArguments($arguments) - 1;
+        $currentArgumentCount  = $this->countArguments($arguments) - $this->argumentsPriorPlaceholderArgumentsStart;
         Assert::natural($currentArgumentCount);
 
         return new ArgumentValidationResult(

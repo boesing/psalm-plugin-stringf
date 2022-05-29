@@ -9,6 +9,7 @@ use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\VariadicPlaceholder;
 use Psalm\CodeLocation;
 use Psalm\Context;
@@ -28,17 +29,20 @@ use function sprintf;
  */
 abstract class AbstractFunctionArgumentValidator implements AfterEveryFunctionCallAnalysisInterface
 {
-    private StatementsSource $statementsSource;
+    protected StatementsSource $statementsSource;
 
-    private CodeLocation $codeLocation;
+    protected CodeLocation $codeLocation;
 
-    private PhpVersion $phpVersion;
+    protected PhpVersion $phpVersion;
 
-    protected function __construct(StatementsSource $statementsSource, CodeLocation $codeLocation, PhpVersion $phpVersion)
+    protected FuncCall $functionCall;
+
+    protected function __construct(StatementsSource $statementsSource, CodeLocation $codeLocation, PhpVersion $phpVersion, FuncCall $functionCall)
     {
         $this->statementsSource = $statementsSource;
         $this->codeLocation     = $codeLocation;
         $this->phpVersion       = $phpVersion;
+        $this->functionCall     = $functionCall;
     }
 
     /**
@@ -106,7 +110,7 @@ abstract class AbstractFunctionArgumentValidator implements AfterEveryFunctionCa
 
         $statementsSource = $event->getStatementsSource();
 
-        (new static($statementsSource, new CodeLocation($statementsSource, $functionCall), PhpVersion::fromCodebase($event->getCodebase())))->validate(
+        (new static($statementsSource, new CodeLocation($statementsSource, $functionCall), PhpVersion::fromCodebase($event->getCodebase()), $functionCall))->validate(
             $functionId,
             $arguments,
             $event->getContext()
