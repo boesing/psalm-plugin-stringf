@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Boesing\PsalmPluginStringf;
 
 use Boesing\PsalmPluginStringf\EventHandler\PossiblyInvalidArgumentForSpecifierValidator;
+use Boesing\PsalmPluginStringf\EventHandler\PrintfFunctionArgumentValidator;
+use Boesing\PsalmPluginStringf\EventHandler\ScanfFunctionArgumentValidator;
 use Boesing\PsalmPluginStringf\EventHandler\SprintfFunctionReturnProvider;
-use Boesing\PsalmPluginStringf\EventHandler\StringfFunctionArgumentValidator;
 use Boesing\PsalmPluginStringf\EventHandler\UnnecessaryFunctionCallValidator;
 use Psalm\Plugin\PluginEntryPointInterface;
 use Psalm\Plugin\RegistrationInterface;
@@ -28,9 +29,11 @@ final class Plugin implements PluginEntryPointInterface
     public function __invoke(RegistrationInterface $registration, ?SimpleXMLElement $config = null): void
     {
         require_once __DIR__ . '/EventHandler/SprintfFunctionReturnProvider.php';
-        require_once __DIR__ . '/EventHandler/StringfFunctionArgumentValidator.php';
+        require_once __DIR__ . '/EventHandler/PrintfFunctionArgumentValidator.php';
+        require_once __DIR__ . '/EventHandler/ScanfFunctionArgumentValidator.php';
         $registration->registerHooksFromClass(SprintfFunctionReturnProvider::class);
-        $registration->registerHooksFromClass(StringfFunctionArgumentValidator::class);
+        $registration->registerHooksFromClass(PrintfFunctionArgumentValidator::class);
+        $registration->registerHooksFromClass(ScanfFunctionArgumentValidator::class);
 
         if ($config === null) {
             return;

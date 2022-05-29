@@ -81,7 +81,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
             $statementsSource,
             new CodeLocation($statementsSource, $expression),
             $context,
-            PhpVersion::fromCodebase($event->getCodebase())
+            PhpVersion::fromCodebase($event->getCodebase())->versionId
         );
     }
 

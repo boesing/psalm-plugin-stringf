@@ -10,21 +10,26 @@ use Webmozart\Assert\Assert;
 
 final class PhpVersion
 {
+    /** @var positive-int */
+    public int $versionId;
+
     /**
-     * @psalm-return positive-int
+     * @param positive-int $versionId
      */
-    public static function fromCodebase(Codebase $codebase): int
+    private function __construct(int $versionId)
+    {
+        $this->versionId = $versionId;
+    }
+
+    public static function fromCodebase(Codebase $codebase): self
     {
         $versionId = $codebase->analysis_php_version_id;
         Assert::positiveInteger($versionId);
 
-        return $versionId;
+        return new self($versionId);
     }
 
-    /**
-     * @psalm-return positive-int
-     */
-    public static function fromStatementSource(StatementsSource $statementsSource): int
+    public static function fromStatementSource(StatementsSource $statementsSource): self
     {
         return self::fromCodebase($statementsSource->getCodebase());
     }

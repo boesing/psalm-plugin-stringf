@@ -73,7 +73,7 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
             $statementsSource,
             new CodeLocation($statementsSource, $expression),
             $context,
-            PhpVersion::fromCodebase($event->getCodebase())
+            PhpVersion::fromCodebase($event->getCodebase())->versionId
         );
     }
 
