@@ -53,8 +53,8 @@ Feature: scanf argument count mismatch
     Given I have the following code
     """
       $value = '1';
-      [$period] = sscanf($value, '%d');
-      assert($period !== null);
+      $result = sscanf($value, '%d');
+      assert($result !== null);
     """
     When I run psalm
     Then I see no errors
