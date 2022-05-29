@@ -259,4 +259,54 @@ Feature: non empty template passed to sprintf results in non-empty-string
     When I run psalm
     Then I see no errors
 
+  Scenario: template is non-empty because non-empty-string is being returned from statically called method
+    Given I have the following code
+    """
+      final class Foo
+      {
+          /** @return non-empty-string */
+          public static function createNonEmptyString(): string
+          {
+              return 'foo';
+          }
+      }
 
+      nonEmptyString(sprintf('%s', Foo::createNonEmptyString()));
+    """
+    When I run psalm
+    Then I see no errors
+
+  Scenario: template is non-empty because non-empty-string is being returned from called method
+    Given I have the following code
+    """
+      final class Foo
+      {
+          /** @return non-empty-string */
+          public function createNonEmptyString(): string
+          {
+              return 'foo';
+          }
+      }
+
+      $foo = new Foo();
+      nonEmptyString(sprintf('%s', (new Foo())->createNonEmptyString()));
+      nonEmptyString(sprintf('%s', $foo->createNonEmptyString()));
+    """
+    When I run psalm
+    Then I see no errors
+
+  Scenario: template is non-empty because non-empty-string is being returned from called method of anonymous class
+    Given I have the following code
+    """
+      $foo = new class {
+        /** @return non-empty-string */
+        public function createNonEmptyString(): string
+        {
+          return 'foo';
+        }
+      };
+
+      nonEmptyString(sprintf('%s', $foo->createNonEmptyString()));
+    """
+    When I run psalm
+    Then I see no errors

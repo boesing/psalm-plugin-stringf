@@ -10,7 +10,6 @@ use Boesing\PsalmPluginStringf\Parser\Psalm\TypeParser;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr;
-use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\StatementsSource;
 use Psalm\Type\Atomic\TNonEmptyString;
@@ -35,8 +34,6 @@ final class Placeholder
 
     private StatementsSource $statementsSource;
 
-    private CodeLocation $codeLocation;
-
     /**
      * @psalm-param non-empty-string $value
      * @psalm-param positive-int $position
@@ -45,8 +42,7 @@ final class Placeholder
         string $value,
         int $position,
         bool $allowIntegerForStringPlaceholder,
-        StatementsSource $statementsSource,
-        CodeLocation $codeLocation
+        StatementsSource $statementsSource
     ) {
         $this->value                            = $value;
         $this->position                         = $position;
@@ -54,16 +50,15 @@ final class Placeholder
         $this->type                             = null;
         $this->allowIntegerForStringPlaceholder = $allowIntegerForStringPlaceholder;
         $this->statementsSource                 = $statementsSource;
-        $this->codeLocation                     = $codeLocation;
     }
 
     /**
      * @psalm-param non-empty-string $value
      * @psalm-param positive-int $position
      */
-    public static function create(string $value, int $position, bool $allowIntegerForStringPlaceholder, StatementsSource $statementsSource, CodeLocation $codeLocation): self
+    public static function create(string $value, int $position, bool $allowIntegerForStringPlaceholder, StatementsSource $statementsSource): self
     {
-        return new self($value, $position, $allowIntegerForStringPlaceholder, $statementsSource, $codeLocation);
+        return new self($value, $position, $allowIntegerForStringPlaceholder, $statementsSource);
     }
 
     /**
@@ -176,8 +171,8 @@ final class Placeholder
 
     private function getArgumentValueType(Expr $value, Context $context): Union
     {
-        if ($value instanceof Expr\FuncCall) {
-            return ReturnTypeParser::create($this->statementsSource, $this->codeLocation, $value)->toType();
+        if ($value instanceof Expr\FuncCall || $value instanceof Expr\StaticCall || $value instanceof Expr\MethodCall) {
+            return ReturnTypeParser::create($this->statementsSource, $context, $value)->toType();
         }
 
         return ArgumentValueParser::create($value, $context)->toType();

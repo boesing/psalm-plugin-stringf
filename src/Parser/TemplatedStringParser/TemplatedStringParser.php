@@ -6,7 +6,6 @@ namespace Boesing\PsalmPluginStringf\Parser\TemplatedStringParser;
 
 use Boesing\PsalmPluginStringf\Parser\PhpParser\ArgumentValueParser;
 use PhpParser\Node\Arg;
-use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\StatementsSource;
 use Webmozart\Assert\Assert;
@@ -46,8 +45,6 @@ final class TemplatedStringParser
 
     private StatementsSource $statementsSource;
 
-    private CodeLocation $codeLocation;
-
     /**
      * @psalm-param positive-int $phpVersion
      */
@@ -56,14 +53,12 @@ final class TemplatedStringParser
         string $template,
         int $phpVersion,
         bool $allowIntegerForStringPlaceholder,
-        StatementsSource $statementsSource,
-        CodeLocation $codeLocation
+        StatementsSource $statementsSource
     ) {
         $this->template                   = $template;
         $this->templateWithoutPlaceholder = $template;
         $this->placeholders               = [];
         $this->statementsSource           = $statementsSource;
-        $this->codeLocation               = $codeLocation;
         $this->parse($functionName, $template, $phpVersion, $allowIntegerForStringPlaceholder);
     }
 
@@ -147,8 +142,7 @@ final class TemplatedStringParser
                 $placeholderValue,
                 $placeholderPosition,
                 $allowIntegerForStringPlaceholder,
-                $this->statementsSource,
-                $this->codeLocation
+                $this->statementsSource
             );
 
             if ($initialPlaceholderInstance !== null) {
@@ -170,16 +164,14 @@ final class TemplatedStringParser
         Context $context,
         int $phpVersion,
         bool $allowIntegerForStringPlaceholder,
-        StatementsSource $statementsSource,
-        CodeLocation $codeLocation
+        StatementsSource $statementsSource
     ): self {
         return new self(
             $functionName,
             ArgumentValueParser::create($templateArgument->value, $context)->toString(),
             $phpVersion,
             $allowIntegerForStringPlaceholder,
-            $statementsSource,
-            $codeLocation
+            $statementsSource
         );
     }
 

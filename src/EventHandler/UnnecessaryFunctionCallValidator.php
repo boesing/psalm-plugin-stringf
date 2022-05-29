@@ -95,8 +95,7 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
                 $context,
                 $phpVersion,
                 false,
-                $statementsSource,
-                $codeLocation
+                $statementsSource
             );
         } catch (InvalidArgumentException $exception) {
             return;

@@ -103,8 +103,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                 $context,
                 $phpVersion,
                 self::$allowIntegerForStringPlaceholder,
-                $statementsSource,
-                $codeLocation
+                $statementsSource
             );
         } catch (InvalidArgumentException $exception) {
             return;
