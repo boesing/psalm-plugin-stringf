@@ -88,3 +88,89 @@ Feature: printf argument count mismatch
       | Type  | Message |
       | TooFewArguments | Template passed to function `printf` requires 1 specifier but 0 are passed. |
     And I see no other errors
+
+  Scenario: template is stored in a class constant using double quotes with newlines (concatenated)
+    Given I have the following code
+    """
+      class Foo
+      {
+          private const MESSAGE = "%s,\n\n" .
+          'Jada jada %s Foo barBaz qoo ook, foo. ' .
+          "Yada yada, foo bar baz qoo %s!\n\n" .
+          'YOLO test: %s';
+
+          public function test(): void
+          {
+              printf(self::MESSAGE, 'foo', 'bar', 'baz');
+          }
+      }
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `sprintf` requires 4 specifier but 3 are passed. |
+    And I see no other errors
+
+  Scenario: template is stored in a class constant using double quotes with newlines
+    Given I have the following code
+    """
+      class Foo
+      {
+          private const MESSAGE = "Foo bar baz: %s of %s with %s.\n\nFoo bar baz ooq: %s";
+
+          public function test(): void
+          {
+                printf(self::MESSAGE, 'foo', 'bar', 'baz');
+          }
+      }
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `sprintf` requires 4 specifier but 3 are passed. |
+    And I see no other errors
+
+  Scenario: template is stored in a class constant using nowdoc
+    Given I have the following code
+    """
+      class Baz
+      {
+          private const MESSAGE = <<<'FOO'
+              YADA YADA bar
+              %s, %s, %s
+              FOO;
+
+          public function test(): void
+          {
+                printf(self::MESSAGE, 'foo', 'bar');
+          }
+      }
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `sprintf` requires 3 specifier but 2 are passed. |
+    And I see no other errors
+
+
+  Scenario: template is stored in a class constant using heredoc
+    Given I have the following code
+    """
+      class Baz
+      {
+          private const MESSAGE = <<<FOO
+YADA YADA bar
+%s, %s, %s
+FOO;
+
+          public function test(): void
+          {
+                printf(self::MESSAGE, 'foo', 'bar');
+          }
+      }
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `sprintf` requires 3 specifier but 2 are passed. |
+    And I see no other errors
