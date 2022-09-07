@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Variable;
 use Psalm\Context;
+use Psalm\StatementsSource;
 
 use function sprintf;
 
@@ -23,16 +24,16 @@ final class StringableVariableInContextParser
         $this->variable = $variable;
     }
 
-    public static function parse(Variable $variable, Context $context): string
+    public static function parse(Variable $variable, Context $context, StatementsSource $statementsSource): string
     {
-        return (new self($variable))->toString($context);
+        return (new self($variable))->toString($context, $statementsSource);
     }
 
-    private function toString(Context $context): string
+    private function toString(Context $context, StatementsSource $statementsSource): string
     {
         $name = $this->variable->name;
         if ($name instanceof Expr) {
-            return ArgumentValueParser::create($name, $context)->stringify();
+            return ArgumentValueParser::create($name, $context, $statementsSource)->stringify();
         }
 
         $variableName = sprintf('$%s', $name);

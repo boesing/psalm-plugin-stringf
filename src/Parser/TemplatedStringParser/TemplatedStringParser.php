@@ -168,7 +168,7 @@ final class TemplatedStringParser
     ): self {
         return new self(
             $functionName,
-            ArgumentValueParser::create($templateArgument->value, $context)->toString(),
+            ArgumentValueParser::create($templateArgument->value, $context, $statementsSource)->toString(),
             $phpVersion,
             $allowIntegerForStringPlaceholder,
             $statementsSource,

@@ -175,6 +175,6 @@ final class Placeholder
             return ReturnTypeParser::create($this->statementsSource, $context, $value)->toType();
         }
 
-        return ArgumentValueParser::create($value, $context)->toType();
+        return ArgumentValueParser::create($value, $context, $this->statementsSource)->toType();
     }
 }

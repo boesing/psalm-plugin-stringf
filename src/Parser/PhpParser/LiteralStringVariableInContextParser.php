@@ -8,6 +8,7 @@ use Boesing\PsalmPluginStringf\Parser\Psalm\LiteralStringVariableParser;
 use InvalidArgumentException;
 use PhpParser\Node\Expr;
 use Psalm\Context;
+use Psalm\StatementsSource;
 
 use function sprintf;
 
@@ -20,16 +21,16 @@ final class LiteralStringVariableInContextParser
         $this->variable = $variable;
     }
 
-    public static function parse(Expr\Variable $variable, Context $context): string
+    public static function parse(Expr\Variable $variable, Context $context, StatementsSource $statementsSource): string
     {
-        return (new self($variable))->toString($context);
+        return (new self($variable))->toString($context, $statementsSource);
     }
 
-    private function toString(Context $context): string
+    private function toString(Context $context, StatementsSource $statementsSource): string
     {
         $name = $this->variable->name;
         if ($name instanceof Expr) {
-            return ArgumentValueParser::create($name, $context)->toString();
+            return ArgumentValueParser::create($name, $context, $statementsSource)->toString();
         }
 
         $variableName = sprintf('$%s', $name);

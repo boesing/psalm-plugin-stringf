@@ -50,7 +50,41 @@ Feature: printf argument count mismatch
   Scenario: template has one specifier but repeated multiple times
     Given I have the following code
     """
-      printf('%s %1$s, foo bar, %1$s', '');
+      printf('%s %1$s, foo bar, %1$s', '', '', '');
     """
     When I run Psalm
-    Then I see no errors
+    Then I see these errors
+      | Type  | Message |
+      | TooManyArguments | Template passed to function `printf` requires 1 specifier but 3 are passed. |
+    And I see no other errors
+
+  Scenario: template length exceeds IBM punch card length of 80 characters
+    Given I have the following code
+    """
+      abstract class Foo
+      {
+          protected const TEMPLATE = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa%s';
+
+          final public function bar(): void
+          {
+              printf(self::TEMPLATE);
+          }
+      }
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `printf` requires 1 specifier but 0 are passed. |
+    And I see no other errors
+
+  Scenario: template is stored in any class constant
+    Given I have the following code
+    """
+      const TEMPLATE = '%s';
+      printf(TEMPLATE);
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `printf` requires 1 specifier but 0 are passed. |
+    And I see no other errors
