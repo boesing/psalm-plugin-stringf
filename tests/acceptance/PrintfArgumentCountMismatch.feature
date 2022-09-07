@@ -174,3 +174,35 @@ FOO;
       | Type  | Message |
       | TooFewArguments | Template passed to function `printf` requires 3 specifier but 2 are passed. |
     And I see no other errors
+
+  Scenario: template contains more than 1000 characters (exceeding maxStringLength) stored in a class constant
+    Given I have the following code
+    """
+      final class Foo
+      {
+          public const TEMPLATE = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+          Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis a: %s';
+      }
+
+      printf(Foo::TEMPLATE);
+    """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `printf` requires 1 specifier but 0 are passed. |
+    And I see no other errors
+
+  Scenario: template contains more than 1000 characters (exceeding maxStringLength) stored in a constant
+    Given I have the following code
+  """
+        const TEMPLATE = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+        Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis a: %s';
+        printf(TEMPLATE);
+      """
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | TooFewArguments | Template passed to function `printf` requires 1 specifier but 0 are passed. |
+    And I see no other errors
