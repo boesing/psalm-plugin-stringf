@@ -108,7 +108,7 @@ Feature: printf argument count mismatch
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | TooFewArguments | Template passed to function `sprintf` requires 4 specifier but 3 are passed. |
+      | TooFewArguments | Template passed to function `printf` requires 4 specifier but 3 are passed. |
     And I see no other errors
 
   Scenario: template is stored in a class constant using double quotes with newlines
@@ -127,7 +127,7 @@ Feature: printf argument count mismatch
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | TooFewArguments | Template passed to function `sprintf` requires 4 specifier but 3 are passed. |
+      | TooFewArguments | Template passed to function `printf` requires 4 specifier but 3 are passed. |
     And I see no other errors
 
   Scenario: template is stored in a class constant using nowdoc
@@ -149,7 +149,7 @@ Feature: printf argument count mismatch
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | TooFewArguments | Template passed to function `sprintf` requires 3 specifier but 2 are passed. |
+      | TooFewArguments | Template passed to function `printf` requires 3 specifier but 2 are passed. |
     And I see no other errors
 
 
@@ -172,5 +172,5 @@ FOO;
     When I run Psalm
     Then I see these errors
       | Type  | Message |
-      | TooFewArguments | Template passed to function `sprintf` requires 3 specifier but 2 are passed. |
+      | TooFewArguments | Template passed to function `printf` requires 3 specifier but 2 are passed. |
     And I see no other errors
