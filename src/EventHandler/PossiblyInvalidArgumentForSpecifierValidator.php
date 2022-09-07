@@ -76,12 +76,12 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         /** @psalm-suppress InvalidScalarArgument */
         (new self(
             $functionId,
-            $arguments
+            $arguments,
         ))->assert(
             $statementsSource,
             new CodeLocation($statementsSource, $expression),
             $context,
-            PhpVersion::fromCodebase($event->getCodebase())->versionId
+            PhpVersion::fromCodebase($event->getCodebase())->versionId,
         );
     }
 
@@ -103,7 +103,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                 $context,
                 $phpVersion,
                 self::$allowIntegerForStringPlaceholder,
-                $statementsSource
+                $statementsSource,
             );
         } catch (InvalidArgumentException $exception) {
             return;
@@ -113,7 +113,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
             $codeLocation,
             $parsed,
             $this->arguments,
-            $context
+            $context,
         );
     }
 
@@ -147,11 +147,11 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                         'Argument %d inferred as "%s" does not match (any of) the suggested type(s) "%s"',
                         $placeholder->position,
                         $argumentType->getId(),
-                        $type->getId()
+                        $type->getId(),
                     ),
                     $codeLocation,
-                    $this->functionName
-                )
+                    $this->functionName,
+                ),
             );
         }
     }

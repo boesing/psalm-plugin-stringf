@@ -29,7 +29,7 @@ final class ScanfArgumentValidator implements ArgumentValidator
         // sscanf and fscanf can return the arguments in case no arguments are passed
         return new ArgumentValidationResult(
             0,
-            0
+            0,
         );
     }
 }

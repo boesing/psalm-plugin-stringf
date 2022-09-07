@@ -57,7 +57,7 @@ final class VariableFromConstInContextParser
             throw new InvalidArgumentException(sprintf(
                 'Expected an instance of "%s" as ClassConstFetch::$class property, got: %s',
                 Name::class,
-                get_class($expr->class)
+                get_class($expr->class),
             ));
         }
 
@@ -65,7 +65,7 @@ final class VariableFromConstInContextParser
             throw new InvalidArgumentException(sprintf(
                 'Expected an instance of "%s" as ClassConstFetch::$name property, got: %s',
                 Identifier::class,
-                get_class($expr->name)
+                get_class($expr->name),
             ));
         }
 

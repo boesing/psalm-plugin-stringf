@@ -65,7 +65,7 @@ final class ArgumentValueParser
 
         throw new InvalidArgumentException(sprintf(
             'Cannot detect type from expression of type "%s"',
-            $this->expr->getType()
+            $this->expr->getType(),
         ));
     }
 

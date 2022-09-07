@@ -22,7 +22,7 @@ final class LiteralStringVariableParser
             throw new InvalidArgumentException(sprintf(
                 'Cannot parse literal string from variable "%s" of type: %s',
                 $variableName,
-                (string) $variableType
+                (string) $variableType,
             ));
         }
 

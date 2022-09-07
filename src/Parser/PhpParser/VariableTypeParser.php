@@ -37,7 +37,7 @@ final class VariableTypeParser
         if ($variable === null) {
             throw new InvalidArgumentException(sprintf(
                 'Variable "%s" is not available in provided scope.',
-                $variableName
+                $variableName,
             ));
         }
 

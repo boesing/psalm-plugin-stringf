@@ -68,12 +68,12 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
         /** @psalm-suppress InvalidScalarArgument */
         (new self(
             $functionId,
-            $arguments
+            $arguments,
         ))->assert(
             $statementsSource,
             new CodeLocation($statementsSource, $expression),
             $context,
-            PhpVersion::fromCodebase($event->getCodebase())->versionId
+            PhpVersion::fromCodebase($event->getCodebase())->versionId,
         );
     }
 
@@ -95,7 +95,7 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
                 $context,
                 $phpVersion,
                 false,
-                $statementsSource
+                $statementsSource,
             );
         } catch (InvalidArgumentException $exception) {
             return;
@@ -103,7 +103,7 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
 
         $this->assertFunctionCallMakesSense(
             $codeLocation,
-            $parsed
+            $parsed,
         );
     }
 

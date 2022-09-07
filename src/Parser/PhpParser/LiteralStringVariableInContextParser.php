@@ -39,7 +39,7 @@ final class LiteralStringVariableInContextParser
 
         return LiteralStringVariableParser::parse(
             $variableName,
-            $context->vars_in_scope[$variableName]
+            $context->vars_in_scope[$variableName],
         );
     }
 }

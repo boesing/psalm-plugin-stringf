@@ -56,7 +56,7 @@ final class StringableVariableInContextParser
         throw new InvalidArgumentException(sprintf(
             'Cannot extract string from variable "%s" with type "%s"',
             $variableName,
-            (string) $variable
+            (string) $variable,
         ));
     }
 }

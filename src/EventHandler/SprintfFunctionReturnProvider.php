@@ -47,7 +47,7 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
                 $context,
                 PhpVersion::fromStatementSource($statementSource)->versionId,
                 false,
-                $statementSource
+                $statementSource,
             );
         } catch (InvalidArgumentException $exception) {
             return null;
@@ -77,7 +77,7 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
         return self::detectReturnTypeWithConsideringFunctionCallArguments(
             $placeholders,
             $functionCallArguments,
-            $context
+            $context,
         );
     }
 
