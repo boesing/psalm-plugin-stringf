@@ -72,7 +72,7 @@ final class Plugin implements PluginEntryPointInterface
 
         $fileName =  __DIR__ . sprintf(
             '/EventHandler/%s.php',
-            basename(str_replace('\\', '/', $eventHandlerClassName))
+            basename(str_replace('\\', '/', $eventHandlerClassName)),
         );
         assert(file_exists($fileName));
         require_once $fileName;

@@ -20,6 +20,7 @@
         <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
         <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>
         <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification"/>
+        <exclude name="SlevomatCodingStandard.Commenting.RequireOneLineDocComment.MultiLineDocComment"/>
     </rule>
 
     <file>src</file>

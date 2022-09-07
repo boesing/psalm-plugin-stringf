@@ -75,7 +75,7 @@ final class ReturnTypeParser
         if (! $source instanceof StatementsAnalyzer) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid statements source given. Can only handle %s at this time.',
-                StatementsAnalyzer::class
+                StatementsAnalyzer::class,
             ));
         }
 
@@ -86,7 +86,7 @@ final class ReturnTypeParser
         if ($analyzer === null) {
             throw new InvalidArgumentException(sprintf(
                 'Could not detect function analyzer for `function_id`: %s',
-                $function_id
+                $function_id,
             ));
         }
 
@@ -107,7 +107,7 @@ final class ReturnTypeParser
             throw new InvalidArgumentException(sprintf(
                 'Expected `class` to be instance of `%s`: `%s` given.',
                 Name::class,
-                get_class($class)
+                get_class($class),
             ));
         }
 
@@ -116,7 +116,7 @@ final class ReturnTypeParser
             throw new InvalidArgumentException(sprintf(
                 'Expected `name` to be instance of `%s`: `%s` given.',
                 Identifier::class,
-                get_class($method)
+                get_class($method),
             ));
         }
 
@@ -135,7 +135,7 @@ final class ReturnTypeParser
             throw new InvalidArgumentException(sprintf(
                 'Expected `name` to be instance of `%s`: `%s` given.',
                 Identifier::class,
-                get_class($method)
+                get_class($method),
             ));
         }
 
@@ -154,7 +154,7 @@ final class ReturnTypeParser
         $methodStorage        = $classLikeStorage->methods[$lowercasedMethodName] ?? null;
         if (! $methodStorage instanceof MethodStorage) {
             throw new InvalidArgumentException(
-                'Provided static call does contain a method call to a method which can not be found within the methods parsed from the class.'
+                'Provided static call does contain a method call to a method which can not be found within the methods parsed from the class.',
             );
         }
 
@@ -175,7 +175,7 @@ final class ReturnTypeParser
                 throw new InvalidArgumentException(sprintf(
                     'Expected `class` to be instance of `%s`: `%s` given.',
                     Name::class,
-                    get_class($class)
+                    get_class($class),
                 ));
             }
 

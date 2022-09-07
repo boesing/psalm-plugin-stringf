@@ -10,7 +10,7 @@
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
-        "doctrine/coding-standard": "^9.0",
+        "doctrine/coding-standard": "^10.0",
         "codeception/module-phpbrowser": "^2.0",
         "codeception/module-asserts": "^2.0",
         "weirdan/codeception-psalm-module": "^0.13.1",

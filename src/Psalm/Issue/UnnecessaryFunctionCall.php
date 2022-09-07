@@ -14,7 +14,7 @@ final class UnnecessaryFunctionCall extends FunctionIssue
         parent::__construct(
             'Function call is unnecessary as there is no placeholder within the template.',
             $code_location,
-            $function_id
+            $function_id,
         );
     }
 }

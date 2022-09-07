@@ -30,7 +30,7 @@ final class StringfArgumentValidator implements ArgumentValidator
 
         return new ArgumentValidationResult(
             $requiredArgumentCount,
-            $currentArgumentCount
+            $currentArgumentCount,
         );
     }
 

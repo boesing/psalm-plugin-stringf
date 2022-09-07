@@ -76,7 +76,7 @@ final class TemplatedStringParser
         $specifiers = sprintf(
             in_array($functionName, ['sprintf', 'printf'], true)
                 ? self::PRINTF_SPECIFIERS_REGEX_PATTERN_TEMPLATE : self::SCANF_SPECIFIERS_REGEX_PATTERN_TEMPLATE,
-            $additionalSpecifierDependingOnPhpVersion
+            $additionalSpecifierDependingOnPhpVersion,
         );
 
         $pattern               = self::ARGUMENT_SCAN_REGEX_PATTERN_PREFIX . $specifiers;
@@ -85,7 +85,7 @@ final class TemplatedStringParser
             sprintf('~%s~', $pattern),
             $template,
             $potentialPlaceholders,
-            PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+            PREG_SET_ORDER | PREG_OFFSET_CAPTURE,
         );
 
         if ($potentialPlaceholders === []) {
@@ -102,7 +102,7 @@ final class TemplatedStringParser
 
                 return strlen($patternPrefix) % 2 === 0;
             },
-            ARRAY_FILTER_USE_BOTH
+            ARRAY_FILTER_USE_BOTH,
         );
 
         if ($placeholders === []) {
@@ -124,7 +124,7 @@ final class TemplatedStringParser
                 $templateWithoutPlaceholders,
                 '',
                 $placeholderIndex - $removedCharacters,
-                $placeholderLength
+                $placeholderLength,
             );
             $removedCharacters                    += $placeholderLength;
             $placeholderPosition                   = (int) ($placeholder['position'][0] ?? 0);
@@ -142,7 +142,7 @@ final class TemplatedStringParser
                 $placeholderValue,
                 $placeholderPosition,
                 $allowIntegerForStringPlaceholder,
-                $this->statementsSource
+                $this->statementsSource,
             );
 
             if ($initialPlaceholderInstance !== null) {
@@ -171,7 +171,7 @@ final class TemplatedStringParser
             ArgumentValueParser::create($templateArgument->value, $context)->toString(),
             $phpVersion,
             $allowIntegerForStringPlaceholder,
-            $statementsSource
+            $statementsSource,
         );
     }
 

@@ -66,7 +66,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
         $message = $this->createIssueMessage(
             $functionName,
             $requiredArgumentCount,
-            $argumentCount
+            $argumentCount,
         );
 
         if ($argumentCount < $requiredArgumentCount) {
@@ -85,7 +85,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
             $this->getIssueTemplate(),
             $functionName,
             $requiredArgumentCount,
-            $argumentCount
+            $argumentCount,
         );
 
         assert($message !== '');
@@ -113,7 +113,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
         (new static($statementsSource, new CodeLocation($statementsSource, $functionCall), PhpVersion::fromCodebase($event->getCodebase()), $functionCall))->validate(
             $functionId,
             $arguments,
-            $event->getContext()
+            $event->getContext(),
         );
     }
 
@@ -158,7 +158,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
                 $context,
                 $this->phpVersion->versionId,
                 false,
-                $this->statementsSource
+                $this->statementsSource,
             );
         } catch (InvalidArgumentException $exception) {
             return;
@@ -175,7 +175,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
             $this->codeLocation,
             $functionName,
             $validationResult->actualArgumentCount,
-            $validationResult->requiredArgumentCount
+            $validationResult->requiredArgumentCount,
         ));
     }
 }
