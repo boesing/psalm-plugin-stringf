@@ -10,6 +10,7 @@ use PhpParser\Node\Scalar\DNumber;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Scalar\String_;
 use Psalm\Context;
+use Psalm\StatementsSource;
 use Psalm\Type;
 use Psalm\Type\Union;
 
@@ -24,16 +25,18 @@ final class ArgumentValueParser
 
     private Expr $expr;
     private Context $context;
+    private StatementsSource $statementsSource;
 
-    private function __construct(Expr $expr, Context $context)
+    private function __construct(Expr $expr, Context $context, StatementsSource $statementsSource)
     {
-        $this->expr    = $expr;
-        $this->context = $context;
+        $this->expr             = $expr;
+        $this->context          = $context;
+        $this->statementsSource = $statementsSource;
     }
 
-    public static function create(Expr $expr, Context $context): self
+    public static function create(Expr $expr, Context $context, StatementsSource $statementsSource): self
     {
-        return new self($expr, $context);
+        return new self($expr, $context, $statementsSource);
     }
 
     public function toString(): string
@@ -85,12 +88,12 @@ final class ArgumentValueParser
 
         if ($expr instanceof Expr\Variable) {
             return $cast
-                ? StringableVariableInContextParser::parse($expr, $context)
-                : LiteralStringVariableInContextParser::parse($expr, $context);
+                ? StringableVariableInContextParser::parse($expr, $context, $this->statementsSource)
+                : LiteralStringVariableInContextParser::parse($expr, $context, $this->statementsSource);
         }
 
         if ($expr instanceof Expr\ClassConstFetch || $expr instanceof Expr\ConstFetch) {
-            return VariableFromConstInContextParser::parse($expr, $context);
+            return VariableFromConstInContextParser::parse($expr, $context, $this->statementsSource);
         }
 
         throw new InvalidArgumentException(sprintf(self::UNPARSABLE_ARGUMENT_VALUE, $expr->getType()));

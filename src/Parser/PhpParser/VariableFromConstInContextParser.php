@@ -10,7 +10,14 @@ use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
+use PhpParser\Node\Scalar\String_;
 use Psalm\Context;
+use Psalm\Internal\Provider\NodeDataProvider;
+use Psalm\StatementsSource;
+use Psalm\Type\TypeNode;
+use Psalm\Type\Union;
+use ReflectionClass;
+use SplObjectStorage;
 
 use function assert;
 use function get_class;
@@ -23,13 +30,16 @@ final class VariableFromConstInContextParser
 
     private Context $context;
 
+    private StatementsSource $statementsSource;
+
     /**
      * @param ClassConstFetch|ConstFetch $expr
      */
-    private function __construct(Expr $expr, Context $context)
+    private function __construct(Expr $expr, Context $context, StatementsSource $statementsSource)
     {
-        $this->expr    = $expr;
-        $this->context = $context;
+        $this->expr             = $expr;
+        $this->context          = $context;
+        $this->statementsSource = $statementsSource;
     }
 
     /**
@@ -37,9 +47,10 @@ final class VariableFromConstInContextParser
      */
     public static function parse(
         Expr $expr,
-        Context $context
+        Context $context,
+        StatementsSource $statementsSource
     ): string {
-        return (new self($expr, $context))->toString();
+        return (new self($expr, $context, $statementsSource))->toString();
     }
 
     private function toString(): string
@@ -78,8 +89,10 @@ final class VariableFromConstInContextParser
 
         $constant = sprintf('%s::%s', $className, $expr->name->toString());
 
-        if (isset($context->vars_in_scope[$constant])) {
-            return $context->vars_in_scope[$constant]->getId();
+        if ($context->hasVariable($constant)) {
+            return $this->extractMostAccurateStringRepresentationOfType(
+                $context->vars_in_scope[$constant],
+            );
         }
 
         throw new InvalidArgumentException(sprintf('Could not find class constant "%s" in scope.', $constant));
@@ -89,10 +102,89 @@ final class VariableFromConstInContextParser
     {
         $constant = (string) $expr->name;
 
-        if (isset($context->vars_in_scope[$constant])) {
-            return $context->vars_in_scope[$constant]->getId();
+        if ($context->hasVariable($constant)) {
+            return $this->extractMostAccurateStringRepresentationOfType(
+                $context->vars_in_scope[$constant],
+            );
         }
 
         throw new InvalidArgumentException(sprintf('Could not find constant "%s" in scope.', $constant));
+    }
+
+    /**
+     * @param ClassConstFetch|ConstFetch $expr
+     */
+    private function extractMostAccurateStringRepresentationOfType(
+        Union $type
+    ): string {
+        if ($type->isSingleStringLiteral()) {
+            return $type->getSingleStringLiteral()->value;
+        }
+
+        if ($type->isSingleFloatLiteral()) {
+            return (string) $type->getSingleFloatLiteral()->value;
+        }
+
+        if ($type->isSingleIntLiteral()) {
+            return (string) $type->getSingleIntLiteral()->value;
+        }
+
+        $nodeTypeProvider = $this->statementsSource->getNodeTypeProvider();
+        if ($nodeTypeProvider instanceof NodeDataProvider) {
+            return $this->extractMostAccurateStringRepresentationOfTypeFromNodeDataProvider(
+                $nodeTypeProvider,
+                $type,
+            );
+        }
+
+        throw $this->createInvalidArgumentException($type);
+    }
+
+    /**
+     * Method uses reflection to hijack the native string which was inferred by php-parser. By doing this, we can
+     * bypass the `maxStringLength` psalm setting.
+     */
+    private function extractMostAccurateStringRepresentationOfTypeFromNodeDataProvider(
+        NodeDataProvider $nodeDataProvider,
+        Union $type
+    ): string {
+        $reflectionClass = new ReflectionClass($nodeDataProvider);
+        if (! $reflectionClass->hasProperty('node_types')) {
+            throw $this->createInvalidArgumentException($type);
+        }
+
+        $nodeTypesProperty = $reflectionClass->getProperty('node_types');
+        $nodeTypesProperty->setAccessible(true);
+        $nodeTypes = $nodeTypesProperty->getValue($nodeDataProvider);
+        if (! $nodeTypes instanceof SplObjectStorage) {
+            throw $this->createInvalidArgumentException($type);
+        }
+
+        foreach ($nodeTypes as $phpParserType) {
+            if (! $phpParserType instanceof String_) {
+                continue;
+            }
+
+            $psalmType = $nodeTypes->offsetGet($phpParserType);
+            if (! $psalmType instanceof TypeNode) {
+                continue;
+            }
+
+            if ($psalmType !== $type) {
+                continue;
+            }
+
+            return $phpParserType->value;
+        }
+
+        throw $this->createInvalidArgumentException($type);
+    }
+
+    private function createInvalidArgumentException(Union $type): InvalidArgumentException
+    {
+        return new InvalidArgumentException(sprintf(
+            'Unable to parse a string representation of the provided type: %s',
+            $type->getId(),
+        ));
     }
 }
