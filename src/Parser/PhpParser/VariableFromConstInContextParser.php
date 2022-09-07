@@ -91,7 +91,7 @@ final class VariableFromConstInContextParser
 
         if ($context->hasVariable($constant)) {
             return $this->extractMostAccurateStringRepresentationOfType(
-                $context->vars_in_scope[$constant]
+                $context->vars_in_scope[$constant],
             );
         }
 
@@ -104,7 +104,7 @@ final class VariableFromConstInContextParser
 
         if ($context->hasVariable($constant)) {
             return $this->extractMostAccurateStringRepresentationOfType(
-                $context->vars_in_scope[$constant]
+                $context->vars_in_scope[$constant],
             );
         }
 
@@ -133,7 +133,7 @@ final class VariableFromConstInContextParser
         if ($nodeTypeProvider instanceof NodeDataProvider) {
             return $this->extractMostAccurateStringRepresentationOfTypeFromNodeDataProvider(
                 $nodeTypeProvider,
-                $type
+                $type,
             );
         }
 
@@ -166,7 +166,7 @@ final class VariableFromConstInContextParser
             }
 
             $psalmType = $nodeTypes->offsetGet($phpParserType);
-            if (!$psalmType instanceof TypeNode) {
+            if (! $psalmType instanceof TypeNode) {
                 continue;
             }
 
@@ -184,7 +184,7 @@ final class VariableFromConstInContextParser
     {
         return new InvalidArgumentException(sprintf(
             'Unable to parse a string representation of the provided type: %s',
-            $type->getId()
+            $type->getId(),
         ));
     }
 }
