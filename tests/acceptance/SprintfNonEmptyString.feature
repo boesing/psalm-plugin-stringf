@@ -173,17 +173,32 @@ Feature: non empty template passed to sprintf results in non-empty-string
     When I run Psalm
     Then I see no errors
 
-  Scenario: template is empty and value which is passed to the string is boolean (false)
+  Scenario: template is empty and value which is passed to the string is boolean (false) on psalm v4-
     Given I have the following code
     """
       /** @psalm-suppress InvalidArgument Ignore the fact that we are passing `false` to sprintf for testing purposes */
       $string = sprintf('%s', false);
       nonEmptyString($string);
     """
+    And I have Psalm older than "5.0" because of "older psalm versions do not have `but` in the error message."
     When I run Psalm
     Then I see these errors
       | Type  | Message |
       | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
+    And I see no other errors
+
+  Scenario: template is empty and value which is passed to the string is boolean (false) on psalm v5+
+    Given I have the following code
+    """
+      /** @psalm-suppress InvalidArgument Ignore the fact that we are passing `false` to sprintf for testing purposes */
+      $string = sprintf('%s', false);
+      nonEmptyString($string);
+    """
+    And I have Psalm newer than "4.99" because of "newer psalm versions do have `but` in the error message."
+    When I run Psalm
+    Then I see these errors
+      | Type  | Message |
+      | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, but parent type string provided |
     And I see no other errors
 
   Scenario: template is empty but value which is passed to the string is of type non-empty-string
@@ -197,7 +212,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     When I run psalm
     Then I see no errors
 
-  Scenario: template gets passed float argument without knowing its value
+  Scenario: template gets passed float argument without knowing its value on psalm v4+
     Given I have the following code
     """
       /** @psalm-var float $float */
@@ -205,10 +220,26 @@ Feature: non empty template passed to sprintf results in non-empty-string
       $string = sprintf('%0.2f', $float);
       nonEmptyString($string);
     """
+    And I have Psalm older than "5.0" because of "older psalm versions do not have `but` in the error message."
     When I run psalm
     Then I see these errors
       | Type  | Message |
       | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, parent type string provided |
+    And I see no other errors
+
+  Scenario: template gets passed float argument without knowing its value on psalm v5+
+    Given I have the following code
+    """
+      /** @psalm-var float $float */
+      $float = 0.00;
+      $string = sprintf('%0.2f', $float);
+      nonEmptyString($string);
+    """
+    And I have Psalm newer than "4.99" because of "newer psalm versions do have `but` in the error message."
+    When I run psalm
+    Then I see these errors
+      | Type  | Message |
+      | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, but parent type string provided |
     And I see no other errors
 
   Scenario: template is non-empty and loaded from constant
