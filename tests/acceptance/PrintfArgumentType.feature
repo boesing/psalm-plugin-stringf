@@ -42,7 +42,7 @@ Feature: printf argument type verification
       | PossiblyInvalidArgument | Argument 1 inferred as "float(1.035)" does not match (any of) the suggested type(s) "int\|string" |
     And I see no other errors
 
-  Scenario: template requires double but invalid values are passed
+  Scenario: template requires double but invalid values are passed on psalm v5+
     Given I have the following code
     """
       printf('%d', 'foo');
@@ -54,7 +54,7 @@ Feature: printf argument type verification
       | PossiblyInvalidArgument | Argument 1 inferred as "'foo'" does not match (any of) the suggested type(s) "float\|int\|numeric-string" |
     And I see no other errors
 
-  Scenario: template requires double but invalid values are passed
+  Scenario: template requires double but invalid values are passed on v4-
     Given I have the following code
     """
       printf('%d', 'foo');
