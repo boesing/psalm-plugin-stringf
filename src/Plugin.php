@@ -49,7 +49,6 @@ final class Plugin implements PluginEntryPointInterface
         }
 
         foreach ($config->experimental->children() as $element) {
-            assert($element instanceof SimpleXMLElement);
             $name = $element->getName();
             if (! isset(self::EXPERIMENTAL_FEATURES[$name])) {
                 continue;
@@ -93,7 +92,6 @@ final class Plugin implements PluginEntryPointInterface
         $options = [];
 
         foreach ($element->attributes() ?? [] as $attribute) {
-            assert($attribute instanceof SimpleXMLElement);
             $name = $attribute->getName();
             assert($name !== '');
 
