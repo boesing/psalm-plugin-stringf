@@ -116,6 +116,6 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
         }
 
         // TODO: find out how to provide psalter functionality
-        IssueBuffer::add(new UnnecessaryFunctionCall($codeLocation, $this->functionName), false);
+        IssueBuffer::maybeAdd(new UnnecessaryFunctionCall($codeLocation, $this->functionName));
     }
 }

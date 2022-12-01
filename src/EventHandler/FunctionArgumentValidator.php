@@ -7,15 +7,15 @@ namespace Boesing\PsalmPluginStringf\EventHandler;
 use Boesing\PsalmPluginStringf\ArgumentValidator\ArgumentValidator;
 use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
+use Boesing\PsalmPluginStringf\Psalm\Issue\TooFewArguments;
+use Boesing\PsalmPluginStringf\Psalm\Issue\TooManyArguments;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\VariadicPlaceholder;
 use Psalm\CodeLocation;
 use Psalm\Context;
-use Psalm\Issue\ArgumentIssue;
-use Psalm\Issue\TooFewArguments;
-use Psalm\Issue\TooManyArguments;
+use Psalm\Issue\PluginIssue;
 use Psalm\IssueBuffer;
 use Psalm\Plugin\EventHandler\AfterEveryFunctionCallAnalysisInterface;
 use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
@@ -62,7 +62,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
         string $functionName,
         int $argumentCount,
         int $requiredArgumentCount
-    ): ArgumentIssue {
+    ): PluginIssue {
         $message = $this->createIssueMessage(
             $functionName,
             $requiredArgumentCount,
@@ -171,7 +171,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
             return;
         }
 
-        IssueBuffer::add($this->createCodeIssue(
+        IssueBuffer::maybeAdd($this->createCodeIssue(
             $this->codeLocation,
             $functionName,
             $validationResult->actualArgumentCount,

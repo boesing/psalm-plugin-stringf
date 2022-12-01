@@ -6,11 +6,11 @@ namespace Boesing\PsalmPluginStringf\EventHandler;
 
 use Boesing\PsalmPluginStringf\Parser\Psalm\PhpVersion;
 use Boesing\PsalmPluginStringf\Parser\TemplatedStringParser\TemplatedStringParser;
+use Boesing\PsalmPluginStringf\Psalm\Issue\PossiblyInvalidArgument;
 use InvalidArgumentException;
 use PhpParser\Node\Arg;
 use Psalm\CodeLocation;
 use Psalm\Context;
-use Psalm\Issue\PossiblyInvalidArgument;
 use Psalm\IssueBuffer;
 use Psalm\Plugin\EventHandler\AfterEveryFunctionCallAnalysisInterface;
 use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
@@ -141,7 +141,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                 continue;
             }
 
-            IssueBuffer::add(
+            IssueBuffer::maybeAdd(
                 new PossiblyInvalidArgument(
                     sprintf(
                         'Argument %d inferred as "%s" does not match (any of) the suggested type(s) "%s"',
@@ -206,6 +206,8 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
     }
 
     /**
+     * @see \Boesing\PsalmPluginStringf\Plugin::registerFeatureHook()
+     *
      * @param array<non-empty-string,string> $options
      */
     public static function applyOptions(array $options): void

@@ -118,6 +118,7 @@ final class TemplatedStringParser
         $templateWithoutPlaceholders = $template;
 
         foreach ($placeholders as $placeholder) {
+            assert(isset($placeholder[0]));
             [$placeholderValue, $placeholderIndex] = $placeholder[0];
             $placeholderLength                     = strlen($placeholderValue);
             $templateWithoutPlaceholders           = substr_replace(

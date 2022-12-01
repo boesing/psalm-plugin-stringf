@@ -6,6 +6,10 @@
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
     findUnusedPsalmSuppress="true"
+    ensureArrayStringOffsetsExist="true"
+    ensureArrayIntOffsetsExist="true"
+    ignoreInternalFunctionFalseReturn="false"
+    ignoreInternalFunctionNullReturn="false"
 >
     <projectFiles>
         <directory name="src" />
@@ -13,12 +17,4 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
-    <issueHandlers>
-        <RedundantCondition>
-            <!-- Lets keep these issues as info-level until we remove support for psalm v4 -->
-            <errorLevel type="info">
-                <directory name="src"/>
-            </errorLevel>
-        </RedundantCondition>
-    </issueHandlers>
 </psalm>
