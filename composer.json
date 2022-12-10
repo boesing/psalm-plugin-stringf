@@ -4,9 +4,10 @@
     "description": "Psalm plugin to work with `sprintf`, `printf`, `sscanf` and `fscanf`.",
     "license": "BSD-3-Clause",
     "require": {
-        "php": "^7.4 || ~8.0.0 || ~8.1.0",
+        "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0",
+        "ext-simplexml": "*",
         "vimeo/psalm": "^4.30 || ^5.0",
-        "webmozart/assert": "^1.10"
+        "webmozart/assert": "^1.11"
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
