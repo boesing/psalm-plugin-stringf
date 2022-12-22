@@ -310,3 +310,12 @@ Feature: non empty template passed to sprintf results in non-empty-string
     """
     When I run psalm
     Then I see no errors
+
+  Scenario: template is concatenated string containing variable with non-empty-string
+    Given I have the following code
+    """
+      $foo = 'Foo bar %s';
+      nonEmptyString(sprintf(realpath(__DIR__) . $foo, 'baz'));
+    """
+    When I run psalm
+    Then I see no errors
