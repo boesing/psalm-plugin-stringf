@@ -19,6 +19,7 @@ final class TooManyArguments extends PluginIssue
         ?string $function_id = null
     ) {
         parent::__construct($message, $code_location);
+
         $this->function_id = $function_id ? strtolower($function_id) : null;
     }
 }
