@@ -17,7 +17,8 @@
         "weirdan/codeception-psalm-module": "^0.14.0",
         "symfony/yaml": "^5.4",
         "symfony/console": "^5.4",
-        "symfony/finder": "^5.4"
+        "symfony/finder": "^5.4",
+        "composer/xdebug-handler": "^2"
     },
     "extra": {
         "psalm": {
