@@ -10,6 +10,8 @@
     ensureArrayIntOffsetsExist="true"
     ignoreInternalFunctionFalseReturn="false"
     ignoreInternalFunctionNullReturn="false"
+    findUnusedCode="false"
+    findUnusedBaselineEntry="true"
 >
     <projectFiles>
         <directory name="src" />
