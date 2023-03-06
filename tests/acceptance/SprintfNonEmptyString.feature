@@ -307,3 +307,16 @@ Feature: non empty template passed to sprintf results in non-empty-string
     """
     When I run psalm
     Then I see no errors
+
+Scenario: Template is non-empty-string based on union types which are all literal strings with a length > 0
+  Given I have the following code
+  """
+    $foo = 'bar %s';
+    if (random_int(0,1) === 1) {
+       $foo = 'baz %s';
+    }
+
+    nonEmptyString(sprintf($foo, ''));
+  """
+  When I run psalm
+  Then I see no errors
