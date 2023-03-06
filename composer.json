@@ -6,7 +6,7 @@
     "require": {
         "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0",
         "ext-simplexml": "*",
-        "vimeo/psalm": "^5.7",
+        "vimeo/psalm": "^5.7.1",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
