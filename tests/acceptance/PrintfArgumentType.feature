@@ -42,28 +42,15 @@ Feature: printf argument type verification
       | PossiblyInvalidArgument | Argument 1 inferred as "float(1.035)" does not match (any of) the suggested type(s) "int\|string" |
     And I see no other errors
 
-  Scenario: template requires double but invalid values are passed on psalm v5+
+  Scenario: template requires double but invalid values are passed
     Given I have the following code
     """
       printf('%d', 'foo');
     """
-    And I have Psalm newer than "4.99" because of "newer psalm versions do surround the variable with single quotes."
     When I run Psalm
     Then I see these errors
       | Type  | Message |
       | PossiblyInvalidArgument | Argument 1 inferred as "'foo'" does not match (any of) the suggested type(s) "float\|int\|numeric-string" |
-    And I see no other errors
-
-  Scenario: template requires double but invalid values are passed on v4-
-    Given I have the following code
-    """
-      printf('%d', 'foo');
-    """
-    And I have Psalm older than "5.0" because of "older psalm versions do surround the variable with double quotes."
-    When I run Psalm
-    Then I see these errors
-      | Type  | Message |
-      | PossiblyInvalidArgument | Argument 1 inferred as ""foo"" does not match (any of) the suggested type(s) "float\|int\|numeric-string" |
     And I see no other errors
 
   Scenario: template requires double and called with a numeric-string

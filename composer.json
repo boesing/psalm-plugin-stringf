@@ -6,7 +6,7 @@
     "require": {
         "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0",
         "ext-simplexml": "*",
-        "vimeo/psalm": "^4.30 || ^5.0",
+        "vimeo/psalm": "^5.7.1",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
@@ -17,7 +17,8 @@
         "weirdan/codeception-psalm-module": "^0.14.0",
         "symfony/yaml": "^5.4",
         "symfony/console": "^5.4",
-        "symfony/finder": "^5.4"
+        "symfony/finder": "^5.4",
+        "composer/xdebug-handler": "^2"
     },
     "extra": {
         "psalm": {

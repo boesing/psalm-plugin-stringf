@@ -65,7 +65,6 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
         $context          = $event->getContext();
         $statementsSource = $event->getStatementsSource();
 
-        /** @psalm-suppress InvalidScalarArgument */
         (new self(
             $functionId,
             $arguments,

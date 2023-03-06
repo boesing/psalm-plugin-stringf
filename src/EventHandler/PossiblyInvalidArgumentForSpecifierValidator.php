@@ -73,7 +73,6 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         $context          = $event->getContext();
         $statementsSource = $event->getStatementsSource();
 
-        /** @psalm-suppress InvalidScalarArgument */
         (new self(
             $functionId,
             $arguments,

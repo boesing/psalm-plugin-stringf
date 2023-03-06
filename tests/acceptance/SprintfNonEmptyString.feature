@@ -173,7 +173,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     When I run Psalm
     Then I see no errors
 
-  Scenario: template is empty and value which is passed to the string is boolean (false) on psalm v5+
+  Scenario: template is empty and value which is passed to the string is boolean (false)
     Given I have the following code
     """
       /** @psalm-suppress InvalidArgument Ignore the fact that we are passing `false` to sprintf for testing purposes */
@@ -197,7 +197,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     When I run psalm
     Then I see no errors
 
-  Scenario: template gets passed float argument without knowing its value on psalm v5+
+  Scenario: template gets passed float argument without knowing its value on psalm
     Given I have the following code
     """
       /** @psalm-var float $float */
@@ -206,10 +206,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
       nonEmptyString($string);
     """
     When I run psalm
-    Then I see these errors
-      | Type  | Message |
-      | ArgumentTypeCoercion | Argument 1 of nonEmptyString expects non-empty-string, but parent type string provided |
-    And I see no other errors
+    Then I see no errors
 
   Scenario: template is non-empty and loaded from constant
     Given I have the following code
