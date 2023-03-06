@@ -4,7 +4,7 @@ Feature: Integer is not allowed to be passed to printf string placeholder when o
     Given I have the following config
     """
     <?xml version="1.0"?>
-    <psalm errorLevel="1" findUnusedPsalmSuppress="true">
+    <psalm errorLevel="1" findUnusedPsalmSuppress="true" findUnusedBaselineEntry="true" findUnusedCode="false">
       <projectFiles>
         <directory name="."/>
       </projectFiles>

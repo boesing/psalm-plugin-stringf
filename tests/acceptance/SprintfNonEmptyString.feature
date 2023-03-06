@@ -5,7 +5,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     Given I have the following config
     """
     <?xml version="1.0"?>
-    <psalm errorLevel="1">
+    <psalm errorLevel="1" findUnusedBaselineEntry="true" findUnusedCode="false">
       <projectFiles>
         <directory name="."/>
       </projectFiles>
@@ -197,7 +197,7 @@ Feature: non empty template passed to sprintf results in non-empty-string
     When I run psalm
     Then I see no errors
 
-  Scenario: template gets passed float argument without knowing its value on psalm
+  Scenario: template gets passed float argument without knowing its value
     Given I have the following code
     """
       /** @psalm-var float $float */

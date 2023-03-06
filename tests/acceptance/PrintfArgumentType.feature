@@ -4,7 +4,7 @@ Feature: printf argument type verification
     Given I have the following config
     """
     <?xml version="1.0"?>
-    <psalm errorLevel="1" findUnusedPsalmSuppress="true">
+    <psalm errorLevel="1" findUnusedPsalmSuppress="true" findUnusedBaselineEntry="true" findUnusedCode="false">
       <projectFiles>
         <directory name="."/>
       </projectFiles>

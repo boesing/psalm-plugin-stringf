@@ -4,7 +4,7 @@ Feature: sprintf argument count mismatch
     Given I have the following config
     """
     <?xml version="1.0"?>
-    <psalm errorLevel="1">
+    <psalm errorLevel="1" findUnusedBaselineEntry="true" findUnusedCode="false">
       <projectFiles>
         <directory name="."/>
       </projectFiles>
