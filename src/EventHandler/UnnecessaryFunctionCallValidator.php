@@ -59,8 +59,8 @@ final class UnnecessaryFunctionCallValidator implements AfterEveryFunctionCallAn
             return;
         }
 
-        Assert::isNonEmptyList($arguments);
         Assert::allIsInstanceOf($arguments, Arg::class);
+        Assert::isNonEmptyList($arguments);
 
         $context          = $event->getContext();
         $statementsSource = $event->getStatementsSource();
