@@ -19,27 +19,16 @@ use Psalm\Type\Atomic\TNamedObject;
 use Psalm\Type\Union;
 use Webmozart\Assert\Assert;
 
-use function get_class;
 use function is_string;
 use function sprintf;
 
 final class ReturnTypeParser
 {
-    private StatementsSource $statementsSource;
-
-    private Context $context;
-
-    /** @var FuncCall|StaticCall|MethodCall */
-    private Expr $value;
-
     /**
      * @param FuncCall|StaticCall|MethodCall $value
      */
-    private function __construct(StatementsSource $statementsSource, Context $context, Expr $value)
+    private function __construct(private StatementsSource $statementsSource, private Context $context, private Expr $value)
     {
-        $this->statementsSource = $statementsSource;
-        $this->context          = $context;
-        $this->value            = $value;
     }
 
     /**
@@ -48,7 +37,7 @@ final class ReturnTypeParser
     public static function create(
         StatementsSource $statementsSource,
         Context $context,
-        Expr $value
+        Expr $value,
     ): self {
         return new self($statementsSource, $context, $value);
     }
@@ -107,7 +96,7 @@ final class ReturnTypeParser
             throw new InvalidArgumentException(sprintf(
                 'Expected `class` to be instance of `%s`: `%s` given.',
                 Name::class,
-                get_class($class),
+                $class::class,
             ));
         }
 
@@ -116,7 +105,7 @@ final class ReturnTypeParser
             throw new InvalidArgumentException(sprintf(
                 'Expected `name` to be instance of `%s`: `%s` given.',
                 Identifier::class,
-                get_class($method),
+                $method::class,
             ));
         }
 
@@ -135,7 +124,7 @@ final class ReturnTypeParser
             throw new InvalidArgumentException(sprintf(
                 'Expected `name` to be instance of `%s`: `%s` given.',
                 Identifier::class,
-                get_class($method),
+                $method::class,
             ));
         }
 
@@ -175,7 +164,7 @@ final class ReturnTypeParser
                 throw new InvalidArgumentException(sprintf(
                     'Expected `class` to be instance of `%s`: `%s` given.',
                     Name::class,
-                    get_class($class),
+                    $class::class,
                 ));
             }
 
@@ -212,6 +201,6 @@ final class ReturnTypeParser
             return $className;
         }
 
-        throw new InvalidArgumentException(sprintf('Unable to parse class name from expression of type: %s', get_class($var)));
+        throw new InvalidArgumentException(sprintf('Unable to parse class name from expression of type: %s', $var::class));
     }
 }

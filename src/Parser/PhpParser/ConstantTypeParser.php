@@ -15,11 +15,8 @@ final class ConstantTypeParser
 {
     private const BOOLEAN_FALSE = ['false'];
 
-    private Expr\ConstFetch $expr;
-
-    private function __construct(Expr\ConstFetch $expr)
+    private function __construct(private Expr\ConstFetch $expr)
     {
-        $this->expr = $expr;
     }
 
     public static function parse(Expr\ConstFetch $expr): Union
@@ -29,7 +26,7 @@ final class ConstantTypeParser
 
     private function toType(): Union
     {
-        $resolvedName = $this->expr->name->parts[0] ?? null;
+        $resolvedName = $this->expr->name->getParts()[0] ?? null;
         if ($resolvedName === null) {
             throw new InvalidArgumentException('Provided constant does not contain resolved name.');
         }

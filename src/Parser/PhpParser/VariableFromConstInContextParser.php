@@ -25,21 +25,11 @@ use function sprintf;
 
 final class VariableFromConstInContextParser
 {
-    /** @var ClassConstFetch|ConstFetch */
-    private Expr $expr;
-
-    private Context $context;
-
-    private StatementsSource $statementsSource;
-
     /**
      * @param ClassConstFetch|ConstFetch $expr
      */
-    private function __construct(Expr $expr, Context $context, StatementsSource $statementsSource)
+    private function __construct(private Expr $expr, private Context $context, private StatementsSource $statementsSource)
     {
-        $this->expr             = $expr;
-        $this->context          = $context;
-        $this->statementsSource = $statementsSource;
     }
 
     /**
@@ -48,7 +38,7 @@ final class VariableFromConstInContextParser
     public static function parse(
         Expr $expr,
         Context $context,
-        StatementsSource $statementsSource
+        StatementsSource $statementsSource,
     ): string {
         return (new self($expr, $context, $statementsSource))->toString();
     }
@@ -115,7 +105,7 @@ final class VariableFromConstInContextParser
      * @param ClassConstFetch|ConstFetch $expr
      */
     private function extractMostAccurateStringRepresentationOfType(
-        Union $type
+        Union $type,
     ): string {
         if ($type->isSingleStringLiteral()) {
             return $type->getSingleStringLiteral()->value;
@@ -146,7 +136,7 @@ final class VariableFromConstInContextParser
      */
     private function extractMostAccurateStringRepresentationOfTypeFromNodeDataProvider(
         NodeDataProvider $nodeDataProvider,
-        Union $type
+        Union $type,
     ): string {
         $reflectionClass = new ReflectionClass($nodeDataProvider);
         if (! $reflectionClass->hasProperty('node_types')) {

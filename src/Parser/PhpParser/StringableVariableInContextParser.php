@@ -17,11 +17,8 @@ use function sprintf;
 
 final class StringableVariableInContextParser
 {
-    private Variable $variable;
-
-    private function __construct(Variable $variable)
+    private function __construct(private Variable $variable)
     {
-        $this->variable = $variable;
     }
 
     public static function parse(Variable $variable, Context $context, StatementsSource $statementsSource): string

@@ -41,24 +41,18 @@ final class TemplatedStringParser
     /** @psalm-var array<positive-int,Placeholder> */
     private array $placeholders;
 
-    private string $template;
-
-    private StatementsSource $statementsSource;
-
     /**
      * @psalm-param positive-int $phpVersion
      */
     private function __construct(
         string $functionName,
-        string $template,
+        private string $template,
         int $phpVersion,
         bool $allowIntegerForStringPlaceholder,
-        StatementsSource $statementsSource
+        private StatementsSource $statementsSource,
     ) {
-        $this->template                   = $template;
         $this->templateWithoutPlaceholder = $template;
         $this->placeholders               = [];
-        $this->statementsSource           = $statementsSource;
         $this->parse($functionName, $template, $phpVersion, $allowIntegerForStringPlaceholder);
     }
 
@@ -66,7 +60,7 @@ final class TemplatedStringParser
         string $functionName,
         string $template,
         int $phpVersion,
-        bool $allowIntegerForStringPlaceholder
+        bool $allowIntegerForStringPlaceholder,
     ): void {
         $additionalSpecifierDependingOnPhpVersion = '';
         if ($phpVersion >= 80000) {
@@ -96,7 +90,7 @@ final class TemplatedStringParser
             $potentialPlaceholders,
             /** @param array{before:array{0:string}} $placeholder */
             static function (
-                array $placeholder
+                array $placeholder,
             ): bool {
                 $patternPrefix = $placeholder['before'][0];
 
@@ -165,7 +159,7 @@ final class TemplatedStringParser
         Context $context,
         int $phpVersion,
         bool $allowIntegerForStringPlaceholder,
-        StatementsSource $statementsSource
+        StatementsSource $statementsSource,
     ): self {
         return new self(
             $functionName,

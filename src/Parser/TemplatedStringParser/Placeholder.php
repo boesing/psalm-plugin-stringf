@@ -17,39 +17,25 @@ use Psalm\Type\Union;
 
 final class Placeholder
 {
-    /** @psalm-var positive-int */
-    public int $position;
-
-    /** @psalm-var non-empty-string */
-    public string $value;
-
-    private ?Union $argumentValueType;
+    private Union|null $argumentValueType;
 
     /** @var list<Placeholder> */
     private array $repeated = [];
 
-    private ?Union $type;
-
-    private bool $allowIntegerForStringPlaceholder;
-
-    private StatementsSource $statementsSource;
+    private Union|null $type;
 
     /**
      * @psalm-param non-empty-string $value
      * @psalm-param positive-int $position
      */
     private function __construct(
-        string $value,
-        int $position,
-        bool $allowIntegerForStringPlaceholder,
-        StatementsSource $statementsSource
+        public string $value,
+        public int $position,
+        private bool $allowIntegerForStringPlaceholder,
+        private StatementsSource $statementsSource,
     ) {
-        $this->value                            = $value;
-        $this->position                         = $position;
-        $this->argumentValueType                = null;
-        $this->type                             = null;
-        $this->allowIntegerForStringPlaceholder = $allowIntegerForStringPlaceholder;
-        $this->statementsSource                 = $statementsSource;
+        $this->argumentValueType = null;
+        $this->type              = null;
     }
 
     /**
@@ -83,7 +69,7 @@ final class Placeholder
     /**
      * @psalm-param list<Arg> $functionCallArguments
      */
-    public function getArgumentType(array $functionCallArguments, Context $context): ?Union
+    public function getArgumentType(array $functionCallArguments, Context $context): Union|null
     {
         if ($this->argumentValueType) {
             return $this->argumentValueType;
@@ -96,14 +82,14 @@ final class Placeholder
 
         try {
             $this->argumentValueType = $this->getArgumentValueType($argument->value, $context);
-        } catch (InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException) {
             return null;
         }
 
         return $this->argumentValueType;
     }
 
-    private function stringify(Union $type): ?string
+    private function stringify(Union $type): string|null
     {
         return TypeParser::create($type)->stringify();
     }
@@ -132,7 +118,7 @@ final class Placeholder
         return $instance;
     }
 
-    public function getSuggestedType(): ?Union
+    public function getSuggestedType(): Union|null
     {
         if ($this->type) {
             return $this->type;
@@ -140,7 +126,7 @@ final class Placeholder
 
         try {
             $type = SpecifierTypeGenerator::create($this->value, $this->allowIntegerForStringPlaceholder)->getSuggestedType();
-        } catch (InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException) {
             return null;
         }
 

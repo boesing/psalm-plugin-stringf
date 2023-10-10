@@ -8,11 +8,8 @@ use Psalm\Type\Union;
 
 final class TypeParser
 {
-    private Union $type;
-
-    private function __construct(Union $type)
+    private function __construct(private Union $type)
     {
-        $this->type = $type;
     }
 
     public static function create(Union $type): self
@@ -20,7 +17,7 @@ final class TypeParser
         return new self($type);
     }
 
-    public function stringify(): ?string
+    public function stringify(): string|null
     {
         $type = $this->type;
 

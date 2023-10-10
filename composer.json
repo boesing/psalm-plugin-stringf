@@ -4,21 +4,21 @@
     "description": "Psalm plugin to work with `sprintf`, `printf`, `sscanf` and `fscanf`.",
     "license": "BSD-3-Clause",
     "require": {
-        "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0",
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
         "ext-simplexml": "*",
-        "vimeo/psalm": "^5.7.1",
+        "vimeo/psalm": "^5.15.0",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "codeception/codeception": "^4.1",
+        "codeception/codeception": "^4.2.2",
         "doctrine/coding-standard": "^11.1",
-        "codeception/module-phpbrowser": "^2.0",
-        "codeception/module-asserts": "^2.0",
+        "codeception/module-phpbrowser": "^2.0.3",
+        "codeception/module-asserts": "^2.0.1",
         "weirdan/codeception-psalm-module": "^0.14.0",
-        "symfony/yaml": "^5.4",
-        "symfony/console": "^5.4",
-        "symfony/finder": "^5.4",
-        "composer/xdebug-handler": "^2"
+        "symfony/yaml": "^5.4.23",
+        "symfony/console": "^5.4.28",
+        "symfony/finder": "^5.4.27",
+        "composer/xdebug-handler": "^2.0.5"
     },
     "extra": {
         "psalm": {

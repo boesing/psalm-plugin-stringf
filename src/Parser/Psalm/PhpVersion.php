@@ -10,15 +10,11 @@ use Webmozart\Assert\Assert;
 
 final class PhpVersion
 {
-    /** @var positive-int */
-    public int $versionId;
-
     /**
      * @param positive-int $versionId
      */
-    private function __construct(int $versionId)
+    private function __construct(public int $versionId)
     {
-        $this->versionId = $versionId;
     }
 
     public static function fromCodebase(Codebase $codebase): self

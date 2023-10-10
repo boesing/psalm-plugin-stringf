@@ -22,16 +22,8 @@ final class ArgumentValueParser
     Provided argument contains an unparsable value of type "%s".
     EOT;
 
-
-    private Expr $expr;
-    private Context $context;
-    private StatementsSource $statementsSource;
-
-    private function __construct(Expr $expr, Context $context, StatementsSource $statementsSource)
+    private function __construct(private Expr $expr, private Context $context, private StatementsSource $statementsSource)
     {
-        $this->expr             = $expr;
-        $this->context          = $context;
-        $this->statementsSource = $statementsSource;
     }
 
     public static function create(Expr $expr, Context $context, StatementsSource $statementsSource): self

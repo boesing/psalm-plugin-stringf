@@ -11,12 +11,12 @@ use function strtolower;
 
 final class PossiblyInvalidArgument extends PluginIssue
 {
-    public ?string $function_id;
+    public string|null $function_id;
 
     public function __construct(
         string $message,
         CodeLocation $code_location,
-        ?string $function_id = null
+        string|null $function_id = null,
     ) {
         parent::__construct($message, $code_location);
 

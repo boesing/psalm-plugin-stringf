@@ -14,11 +14,8 @@ use function sprintf;
 
 final class LiteralStringVariableInContextParser
 {
-    private Expr\Variable $variable;
-
-    private function __construct(Expr\Variable $variable)
+    private function __construct(private Expr\Variable $variable)
     {
-        $this->variable = $variable;
     }
 
     public static function parse(Expr\Variable $variable, Context $context, StatementsSource $statementsSource): string
