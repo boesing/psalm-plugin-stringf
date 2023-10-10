@@ -29,7 +29,7 @@ final class ConstantTypeParser
 
     private function toType(): Union
     {
-        $resolvedName = $this->expr->name->parts[0] ?? null;
+        $resolvedName = $this->expr->name->getParts()[0] ?? null;
         if ($resolvedName === null) {
             throw new InvalidArgumentException('Provided constant does not contain resolved name.');
         }

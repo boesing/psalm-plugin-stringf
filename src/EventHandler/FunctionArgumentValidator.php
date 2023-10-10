@@ -81,16 +81,12 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
      */
     private function createIssueMessage(string $functionName, int $requiredArgumentCount, int $argumentCount): string
     {
-        $message = sprintf(
+        return sprintf(
             $this->getIssueTemplate(),
             $functionName,
             $requiredArgumentCount,
             $argumentCount,
         );
-
-        assert($message !== '');
-
-        return $message;
     }
 
     /**
