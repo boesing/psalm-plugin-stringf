@@ -26,7 +26,7 @@ final class Plugin implements PluginEntryPointInterface
         'ReportUnnecessaryFunctionCalls' => UnnecessaryFunctionCallValidator::class,
     ];
 
-    public function __invoke(RegistrationInterface $registration, ?SimpleXMLElement $config = null): void
+    public function __invoke(RegistrationInterface $registration, SimpleXMLElement|null $config = null): void
     {
         require_once __DIR__ . '/EventHandler/SprintfFunctionReturnProvider.php';
         require_once __DIR__ . '/EventHandler/PrintfFunctionArgumentValidator.php';
@@ -65,7 +65,7 @@ final class Plugin implements PluginEntryPointInterface
     private function registerFeatureHook(
         RegistrationInterface $registration,
         string $featureName,
-        array $options
+        array $options,
     ): void {
         $eventHandlerClassName = self::EXPERIMENTAL_FEATURES[$featureName];
 

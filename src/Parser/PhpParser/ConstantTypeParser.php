@@ -15,11 +15,8 @@ final class ConstantTypeParser
 {
     private const BOOLEAN_FALSE = ['false'];
 
-    private Expr\ConstFetch $expr;
-
-    private function __construct(Expr\ConstFetch $expr)
+    private function __construct(private Expr\ConstFetch $expr)
     {
-        $this->expr = $expr;
     }
 
     public static function parse(Expr\ConstFetch $expr): Union

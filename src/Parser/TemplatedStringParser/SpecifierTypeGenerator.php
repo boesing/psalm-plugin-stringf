@@ -20,15 +20,12 @@ final class SpecifierTypeGenerator
     /** @psalm-var non-empty-string */
     private string $specifier;
 
-    private bool $allowIntegerForStringPlaceholder;
-
     /**
      * @psalm-param non-empty-string $specifier
      */
-    private function __construct(string $specifier, bool $allowIntegerForStringPlaceholder)
+    private function __construct(string $specifier, private bool $allowIntegerForStringPlaceholder)
     {
-        $this->specifier                        = $this->parse($specifier);
-        $this->allowIntegerForStringPlaceholder = $allowIntegerForStringPlaceholder;
+        $this->specifier = $this->parse($specifier);
     }
 
     /**

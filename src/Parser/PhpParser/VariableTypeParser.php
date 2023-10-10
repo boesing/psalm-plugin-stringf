@@ -13,11 +13,8 @@ use function sprintf;
 
 final class VariableTypeParser
 {
-    private Expr\Variable $expr;
-
-    private function __construct(Expr\Variable $expr)
+    private function __construct(private Expr\Variable $expr)
     {
-        $this->expr = $expr;
     }
 
     public static function parse(Expr\Variable $expr, Context $context): Union

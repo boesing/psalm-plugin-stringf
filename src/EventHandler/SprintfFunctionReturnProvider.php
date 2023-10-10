@@ -28,7 +28,7 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
         return [self::FUNCTION_SPRINTF];
     }
 
-    public static function getFunctionReturnType(FunctionReturnTypeProviderEvent $event): ?Type\Union
+    public static function getFunctionReturnType(FunctionReturnTypeProviderEvent $event): Type\Union|null
     {
         $functionName          = $event->getFunctionId();
         $functionCallArguments = $event->getCallArgs();
@@ -49,7 +49,7 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
                 false,
                 $statementSource,
             );
-        } catch (InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException) {
             return null;
         }
 
@@ -62,8 +62,8 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
     private static function detectTypes(
         TemplatedStringParser $parser,
         array $functionCallArguments,
-        Context $context
-    ): ?Type\Union {
+        Context $context,
+    ): Type\Union|null {
         $templateWithoutPlaceholder = $parser->getTemplateWithoutPlaceholder();
 
         if ($templateWithoutPlaceholder !== '') {
@@ -88,8 +88,8 @@ final class SprintfFunctionReturnProvider implements FunctionReturnTypeProviderI
     private static function detectReturnTypeWithConsideringFunctionCallArguments(
         array $placeholders,
         array $functionCallArguments,
-        Context $context
-    ): ?Type\Union {
+        Context $context,
+    ): Type\Union|null {
         if ($placeholders === [] || $functionCallArguments === []) {
             return null;
         }

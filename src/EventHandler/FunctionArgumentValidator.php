@@ -21,7 +21,6 @@ use Psalm\Plugin\EventHandler\AfterEveryFunctionCallAnalysisInterface;
 use Psalm\Plugin\EventHandler\Event\AfterEveryFunctionCallAnalysisEvent;
 use Psalm\StatementsSource;
 
-use function assert;
 use function sprintf;
 
 /**
@@ -29,20 +28,8 @@ use function sprintf;
  */
 abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalysisInterface
 {
-    protected StatementsSource $statementsSource;
-
-    protected CodeLocation $codeLocation;
-
-    protected PhpVersion $phpVersion;
-
-    protected FuncCall $functionCall;
-
-    protected function __construct(StatementsSource $statementsSource, CodeLocation $codeLocation, PhpVersion $phpVersion, FuncCall $functionCall)
+    protected function __construct(protected StatementsSource $statementsSource, protected CodeLocation $codeLocation, protected PhpVersion $phpVersion, protected FuncCall $functionCall)
     {
-        $this->statementsSource = $statementsSource;
-        $this->codeLocation     = $codeLocation;
-        $this->phpVersion       = $phpVersion;
-        $this->functionCall     = $functionCall;
     }
 
     /**
@@ -61,7 +48,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
         CodeLocation $codeLocation,
         string $functionName,
         int $argumentCount,
-        int $requiredArgumentCount
+        int $requiredArgumentCount,
     ): PluginIssue {
         $message = $this->createIssueMessage(
             $functionName,
@@ -120,7 +107,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
     private function validate(
         string $functionName,
         array $arguments,
-        Context $context
+        Context $context,
     ): void {
         if (! $this->canHandleFunction($functionName)) {
             return;
@@ -156,7 +143,7 @@ abstract class FunctionArgumentValidator implements AfterEveryFunctionCallAnalys
                 false,
                 $this->statementsSource,
             );
-        } catch (InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException) {
             return;
         }
 

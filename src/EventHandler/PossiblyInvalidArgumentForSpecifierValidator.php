@@ -34,22 +34,14 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         'printf',
     ];
 
-    /** @psalm-var non-empty-string */
-    private string $functionName;
-
-    /** @psalm-var non-empty-list<Arg> */
-    private array $arguments;
-
     /**
      * @param non-empty-string    $functionName
      * @param non-empty-list<Arg> $arguments
      */
     public function __construct(
-        string $functionName,
-        array $arguments
+        private string $functionName,
+        private array $arguments,
     ) {
-        $this->functionName = $functionName;
-        $this->arguments    = $arguments;
     }
 
     public static function afterEveryFunctionCallAnalysis(AfterEveryFunctionCallAnalysisEvent $event): void
@@ -91,7 +83,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         StatementsSource $statementsSource,
         CodeLocation $codeLocation,
         Context $context,
-        int $phpVersion
+        int $phpVersion,
     ): void {
         $template = $this->arguments[0];
 
@@ -104,7 +96,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
                 self::$allowIntegerForStringPlaceholder,
                 $statementsSource,
             );
-        } catch (InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException) {
             return;
         }
 
@@ -123,7 +115,7 @@ final class PossiblyInvalidArgumentForSpecifierValidator implements AfterEveryFu
         CodeLocation $codeLocation,
         TemplatedStringParser $parsed,
         array $args,
-        Context $context
+        Context $context,
     ): void {
         foreach ($parsed->getPlaceholders() as $placeholder) {
             $argumentType = $placeholder->getArgumentType($args, $context);

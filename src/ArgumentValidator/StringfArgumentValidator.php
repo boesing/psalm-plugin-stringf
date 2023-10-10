@@ -11,15 +11,11 @@ use Webmozart\Assert\Assert;
 
 final class StringfArgumentValidator implements ArgumentValidator
 {
-    /** @var 0|positive-int */
-    private int $argumentsPriorPlaceholderArgumentsStart;
-
     /**
      * @param 0|positive-int $argumentsPriorPlaceholderArgumentsStart
      */
-    public function __construct(int $argumentsPriorPlaceholderArgumentsStart)
+    public function __construct(private int $argumentsPriorPlaceholderArgumentsStart)
     {
-        $this->argumentsPriorPlaceholderArgumentsStart = $argumentsPriorPlaceholderArgumentsStart;
     }
 
     public function validate(TemplatedStringParser $templatedStringParser, array $arguments): ArgumentValidationResult
